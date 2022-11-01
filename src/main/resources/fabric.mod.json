@@ -1,29 +1,32 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "seedlight_wrl_net",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "SeedLight World Network",
+  "description": "A mod trying to connect the minecraft multiverse!",
   "authors": [
-    "Me!"
+    "Emafire003!"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
+    "homepage": "https://github.com/Emafire003/SeedLightWorldNetwork",
     "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
 
-  "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "license": "ARR",
+  "icon": "assets/seedlight_wrl_net/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.ExampleMod"
+      "me.emafire003.dev.seedlight_wrl_net.SeedlightWN"
+    ],
+    "client": [
+      "me.emafire003.dev.seedlight_wrl_net.SeedlightWNClient"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "seedlight_wrl_net.mixins.json"
   ],
 
   "depends": {

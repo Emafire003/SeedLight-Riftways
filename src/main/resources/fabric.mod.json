@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "seedlight_wrl_net",
+  "id": "seedlight_riftways",
   "version": "${version}",
 
-  "name": "SeedLight World Network",
+  "name": "SeedLight Riftways",
   "description": "A mod trying to connect the minecraft multiverse!",
   "authors": [
     "Emafire003!"
@@ -14,20 +14,22 @@
   },
 
   "license": "ARR",
-  "icon": "assets/seedlight_wrl_net/icon.png",
+  "icon": "assets/seedlight_riftways/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "me.emafire003.dev.seedlight_wrl_net.SeedlightWN"
+      "me.emafire003.dev.seedlight_riftways.SeedlightRiftways"
     ],
     "client": [
-      "me.emafire003.dev.seedlight_wrl_net.SeedlightWNClient"
+      "me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient"
     ]
   },
+  "accessWidener" : "seedlight_riftways.accessWidener",
   "mixins": [
-    "seedlight_wrl_net.mixins.json"
+    "seedlight_riftways.mixins.json"
   ],
+
 
   "depends": {
     "fabricloader": ">=0.14.9",

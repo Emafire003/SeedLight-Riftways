@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "seedlight_riftways:block/seedlight_rift_flowering_leaves"
+  }
+}

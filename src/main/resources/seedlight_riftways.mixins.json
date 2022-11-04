@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.emafire003.dev.seedlight_riftways.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+  ],
+  "client": [
+    "ConnectScreenMixin",
+    "BlockBufferBuilderStorageMixin",
+    "RenderLayersOfInvoker"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "seedlight_riftways:block/rift_wood",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "seedlight_riftways:block/rift_wood"
+    },
+    "axis=z": {
+      "model": "seedlight_riftways:block/rift_wood",
+      "x": 90
+    }
+  }
+}

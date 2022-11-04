@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "seedlight_riftways:block/rift_log",
+    "side": "seedlight_riftways:block/rift_log"
+  }
+}

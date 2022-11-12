@@ -26,7 +26,7 @@ public class SLRBlocks {
         return Registry.register(Registry.BLOCK, new Identifier(SeedlightRiftways.MOD_ID, name), block);
     }
 
-    public static final Block SQUARE_PORTAL_BLOCK = registerBlock("riftway",
+    public static final Block RIFTWAY_BLOCK = registerBlock("riftway",
             new RiftWayBlock(FabricBlockSettings.of(Material.AMETHYST).strength(0.7f).collidable(false).luminance(8).sounds(BlockSoundGroup.AMETHYST_BLOCK)), ItemGroup.DECORATIONS);
 
     public static final Block RIFT_LOG = registerBlock("rift_log",
@@ -79,12 +79,12 @@ public class SLRBlocks {
         SeedlightRiftways.LOGGER.debug("Registering Blocks for " + SeedlightRiftways.MOD_ID);
     }
 
-    public static BlockEntityType<RiftWayBlockEntity> SQUARE_PORTAL_BLOCKENTITY;
+    public static BlockEntityType<RiftWayBlockEntity> RIFTWAY_BLOCKENTITY;
 
     public static void registerAllBlockEntities() {
-        SQUARE_PORTAL_BLOCKENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE,
+        RIFTWAY_BLOCKENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE,
                 new Identifier(SeedlightRiftways.MOD_ID, "square_portal"),
                 FabricBlockEntityTypeBuilder.create(RiftWayBlockEntity::new,
-                        SQUARE_PORTAL_BLOCK).build());
+                        RIFTWAY_BLOCK).build());
     }
 }

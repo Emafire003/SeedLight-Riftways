@@ -19,7 +19,7 @@ public class DirectRiftwayBlockEnity extends RiftWayBlockEntity {
         List<PlayerEntity> list = world.getEntitiesByClass(PlayerEntity.class, new Box(pos), (entity1 -> true));
         boolean active = false;
         if (!list.isEmpty() && active) {
-            SeedLightRiftwaysClient.connetToOtherServer();
+            SeedLightRiftwaysClient.connectToServer();
         }
 
     }

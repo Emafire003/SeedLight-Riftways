@@ -3,5 +3,8 @@
   "block.seedlight_riftways.rift_log": "Rift Log",
   "block.seedlight_riftways.rift_wood": "Rift Wood",
   "block.seedlight_riftways.seedlight_rift_leaves": "Seedlight Rift Leaves",
-  "block.seedlight_riftways.seedlight_rift_flowering_leaves": "Seedlight Rift Flowering Leaves"
+  "block.seedlight_riftways.seedlight_rift_flowering_leaves": "Seedlight Rift Flowering Leaves",
+  "item.seedlight_riftways.inter_riftways_leaf.tooltip": "A leaf used as a compass? Uh",
+  "item.seedlight_riftways.inter_riftways_leaf.tooltip1": "This points towards: ",
+  "item.seedlight_riftways.inter_riftways_leaf": "Inter-Riftways Leaf"
 }

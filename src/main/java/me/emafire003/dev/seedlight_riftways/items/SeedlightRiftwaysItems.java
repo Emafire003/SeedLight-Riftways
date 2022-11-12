@@ -13,9 +13,9 @@ import net.minecraft.util.registry.Registry;
 
 public class SeedlightRiftwaysItems {
 
-    public static final Item LUXINTUS_BERRY = registerItem("luxintus_berry",
-            new InterRiftwaysLeafItem(new FabricItemSettings().rarity(Rarity.EPIC)
-                    .food(new FoodComponent.Builder().alwaysEdible().hunger(5).build()).maxCount(16).group(ItemGroup.FOOD)));
+    public static final Item INTERRIFTWAYS_LEAF = registerItem("inter_riftways_leaf",
+            new InterRiftwaysLeafItem(new FabricItemSettings().rarity(Rarity.RARE)
+                    .group(ItemGroup.MISC)));
 
     private static Item registerItem(String name, Item item){
         return Registry.register(Registry.ITEM, new Identifier(SeedlightRiftways.MOD_ID, name), item);

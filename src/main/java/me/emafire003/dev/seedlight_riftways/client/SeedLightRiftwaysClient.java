@@ -19,14 +19,18 @@ import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
 public class SeedLightRiftwaysClient implements ClientModInitializer {
+
+    public static String SERVER_IP = "metamc.it";
+    //TODO i will need to save it on a file
+    public static boolean IS_RIFTWAY_ACTIVE = false;
     /**
      * Runs the mod initializer on the client environment.
      */
     @Override
     public void onInitializeClient() {
         ClientCommandRegistrationCallback.EVENT.register(SLRCommands::registerCommands);
-        BlockRenderLayerMap.INSTANCE.putBlock(SLRBlocks.SQUARE_PORTAL_BLOCK, SLRRenderLayers.getSquarePortal());
-        BlockEntityRendererRegistry.register(SLRBlocks.SQUARE_PORTAL_BLOCKENTITY, RiftwayBlockEntityRenderer::new);
+        BlockRenderLayerMap.INSTANCE.putBlock(SLRBlocks.RIFTWAY_BLOCK, SLRRenderLayers.getRiftway());
+        BlockEntityRendererRegistry.register(SLRBlocks.RIFTWAY_BLOCKENTITY, RiftwayBlockEntityRenderer::new);
     }
 
     
@@ -42,9 +46,24 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
         client.setScreen(new MultiplayerScreen(titleScreen));
     }
 
-    public static void connetToOtherServer(){
+    public static void connectToServer(){
         try{
-            ServerInfo serverInfo = new ServerInfo("emaworld", "metamc.it", false);
+            ServerInfo serverInfo = new ServerInfo("riftway_to_"+SERVER_IP, SERVER_IP, false);
+            SeedlightRiftways.LOGGER.info("Trying to disconnect player form world...");
+            disconnect(MinecraftClient.getInstance());
+            SeedlightRiftways.LOGGER.info("Trying to connect to server...");
+            ConnectScreen.connect(MinecraftClient.getInstance().currentScreen, MinecraftClient.getInstance(), ServerAddress.parse(serverInfo.address), serverInfo);
+            SeedlightRiftways.LOGGER.info("aaaand possibly failed. Or maybe not!");
+        }catch (Exception e){
+            e.printStackTrace();
+            SeedlightRiftways.LOGGER.info("AH-AH, GOTCHA, THERE IS AN ERROR!");
+        }
+
+    }
+
+    public static void connectToServer(String ip_address){
+        try{
+            ServerInfo serverInfo = new ServerInfo("riftway_to_"+ip_address, ip_address, false);
             SeedlightRiftways.LOGGER.info("Trying to disconnect player form world...");
             disconnect(MinecraftClient.getInstance());
             SeedlightRiftways.LOGGER.info("Trying to connect to server...");

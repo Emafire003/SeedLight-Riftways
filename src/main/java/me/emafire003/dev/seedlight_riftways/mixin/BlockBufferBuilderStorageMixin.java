@@ -22,7 +22,7 @@ public abstract class BlockBufferBuilderStorageMixin {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     public void init(CallbackInfo callbackInfo) {
-        this.builders.put(SLRRenderLayers.getSquarePortal(), new BufferBuilder(SLRRenderLayers.getSquarePortal().getExpectedBufferSize()));
+        this.builders.put(SLRRenderLayers.getRiftway(), new BufferBuilder(SLRRenderLayers.getRiftway().getExpectedBufferSize()));
     }
 
 }

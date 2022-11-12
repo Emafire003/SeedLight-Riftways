@@ -2,6 +2,7 @@ package me.emafire003.dev.seedlight_riftways.blocks.riftwayblock;
 
 import me.emafire003.dev.seedlight_riftways.SeedlightRiftways;
 import me.emafire003.dev.seedlight_riftways.client.SLRRenderLayers;
+import me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.RenderLayer;
@@ -13,15 +14,15 @@ import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
 public class RiftwayBlockEntityRenderer extends EndPortalBlockEntityRenderer<RiftWayBlockEntity> {
-    private static final Identifier BEAM_TEXTURE = new Identifier("textures/entity/end_gateway_beam.png");
+    public static final Identifier PORTAL_TEXTURE_INACTIVE = new Identifier(SeedlightRiftways.MOD_ID, "textures/entity/riftway_inactive.png");
     public static final Identifier SKY_TEXTURE = new Identifier("textures/environment/portal_sky.png");
-    public static final Identifier PORTAL_TEXTURE = new Identifier(SeedlightRiftways.MOD_ID, "textures/entity/square_portal.png");
+    public static final Identifier PORTAL_TEXTURE = new Identifier(SeedlightRiftways.MOD_ID, "textures/entity/riftway.png");
 
     public RiftwayBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
         super(context);
     }
 
-    public void render(RiftWayBlockEntity SquarePortalBlockEntity, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
+    public void render(RiftWayBlockEntity blockEntity, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
         /*if (RiftWayBlockEntity.needsCooldownBeforeTeleporting()) {
             float g = RiftWayBlockEntity.isRecentlyGenerated() ? RiftWayBlockEntity.getRecentlyGeneratedBeamHeight(f) : RiftWayBlockEntity.getCooldownBeamHeight(f);
             double d = RiftWayBlockEntity.isRecentlyGenerated() ? (double)RiftWayBlockEntity.getWorld().getTopY() : 50.0;
@@ -32,7 +33,7 @@ public class RiftwayBlockEntityRenderer extends EndPortalBlockEntityRenderer<Rif
             BeaconBlockEntityRenderer.renderBeam(matrixStack, vertexConsumerProvider, BEAM_TEXTURE, f, g, l, -k, k * 2, fs, 0.15F, 0.175F);
         }*/
 
-        super.render(SquarePortalBlockEntity, f, matrixStack, vertexConsumerProvider, i, j);
+        super.render(blockEntity, f, matrixStack, vertexConsumerProvider, i, j);
     }
     @Override
     protected float getTopYOffset() {
@@ -44,7 +45,10 @@ public class RiftwayBlockEntityRenderer extends EndPortalBlockEntityRenderer<Rif
     }
     @Override
     protected RenderLayer getLayer() {
-        return SLRRenderLayers.getSquarePortal();
+        if(SeedLightRiftwaysClient.IS_RIFTWAY_ACTIVE){
+            return SLRRenderLayers.getRiftway();
+        }
+        return SLRRenderLayers.getRiftwayInactive();
     }
     @Override
     public int getRenderDistance() {

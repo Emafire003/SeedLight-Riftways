@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "seedlight_riftways:item/inter_riftways_leaf"
+  }
+}

@@ -17,6 +17,10 @@ public class SeedlightRiftwaysItems {
             new InterRiftwaysLeafItem(new FabricItemSettings().rarity(Rarity.RARE)
                     .group(ItemGroup.MISC)));
 
+    public static final Item SEEDLIGHT_SEED = registerItem("seedlight_seed",
+            new SeedLight_Seed(new FabricItemSettings().rarity(Rarity.EPIC).maxCount(2)
+                    .group(ItemGroup.MISC)));
+
     private static Item registerItem(String name, Item item){
         return Registry.register(Registry.ITEM, new Identifier(SeedlightRiftways.MOD_ID, name), item);
     }

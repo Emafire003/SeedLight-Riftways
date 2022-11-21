@@ -4,8 +4,11 @@ import me.emafire003.dev.seedlight_riftways.SeedlightRiftways;
 import me.emafire003.dev.seedlight_riftways.blocks.SLRBlocks;
 import me.emafire003.dev.seedlight_riftways.blocks.riftwayblock.RiftwayBlockEntityRenderer;
 import me.emafire003.dev.seedlight_riftways.commands.SLRCommands;
+import me.emafire003.dev.seedlight_riftways.particles.RiftParticle;
+import me.emafire003.dev.seedlight_riftways.particles.RiftParticles;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.fabricmc.api.ClientModInitializer;
@@ -31,6 +34,8 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
         ClientCommandRegistrationCallback.EVENT.register(SLRCommands::registerCommands);
         BlockRenderLayerMap.INSTANCE.putBlock(SLRBlocks.RIFTWAY_BLOCK, SLRRenderLayers.getRiftway());
         BlockEntityRendererRegistry.register(SLRBlocks.RIFTWAY_BLOCKENTITY, RiftwayBlockEntityRenderer::new);
+        ParticleFactoryRegistry.getInstance().register(RiftParticles.RIFTWAY_BEGIN_TELEPORT_PARTICLE, RiftParticle.Factory::new);
+
     }
 
     

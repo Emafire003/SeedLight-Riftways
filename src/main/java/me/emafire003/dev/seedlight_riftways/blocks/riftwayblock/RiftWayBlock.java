@@ -11,6 +11,8 @@ import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.item.FireChargeItem;
+import net.minecraft.item.FlintAndSteelItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
@@ -84,20 +86,37 @@ public class RiftWayBlock extends BlockWithEntity {
 
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack itemStack = player.getStackInHand(hand);
-        if(!(itemStack.getItem() instanceof InterRiftwaysLeafItem)){
-            return super.onUse(state, world, pos, player, hand, hit);
+        if((itemStack.getItem() instanceof InterRiftwaysLeafItem)){
+            if(itemStack.getNbt().get(NBT_SERVERIP_KEY) == null || itemStack.getNbt().getString(NBT_SERVERIP_KEY).equalsIgnoreCase("")){
+                return super.onUse(state, world, pos, player, hand, hit);
+            }
+            SERVER_IP = itemStack.getNbt().getString(NBT_SERVERIP_KEY);
+            if(!player.getWorld().isClient){
+                player.sendMessage(Text.literal(SeedlightRiftways.PREFIX+" §bA new destination has been set for the portal, §d" + SERVER_IP));
+            }else{
+                if(!SeedlightRiftways.isAddressValid(SERVER_IP)){
+                    player.sendMessage(Text.literal(SeedlightRiftways.PREFIX+" §c§lWARNING! §cThe address you have specified, §5§l" + SERVER_IP + " §c is incorrect or unreachable! (Check your internet connection!)"));
+                }
+            }
+            //Validate name as IP address
+            if(!player.getAbilities().creativeMode){
+                itemStack.decrement(1);
+            }
+            SeedLightRiftwaysClient.IS_RIFTWAY_ACTIVE = true;
+            return ActionResult.PASS;
+        }else if(itemStack.getItem() instanceof FireChargeItem){
+            if(!player.getWorld().isClient){
+                player.sendMessage(Text.literal(SeedlightRiftways.PREFIX+" §bThe riftway has been deactivated!"));
+            }
+            //Validate name as IP address
+            if(!player.getAbilities().creativeMode){
+                itemStack.decrement(1);
+            }
+            SeedLightRiftwaysClient.IS_RIFTWAY_ACTIVE = false;
+            return ActionResult.PASS;
         }
-        if(itemStack.getNbt().get(NBT_SERVERIP_KEY) != null || !itemStack.getNbt().getString(NBT_SERVERIP_KEY).equalsIgnoreCase("")){
-            return super.onUse(state, world, pos, player, hand, hit);
-        }
-        SERVER_IP = itemStack.getNbt().getString(NBT_SERVERIP_KEY);
-        player.sendMessage(Text.literal(SeedlightRiftways.PREFIX+" §bA new destination has been set for the portal, §d").append(SERVER_IP));
-        //Validate name as IP address
-        if(!player.getAbilities().creativeMode){
-            itemStack.decrement(1);
-        }
-        SeedLightRiftwaysClient.IS_RIFTWAY_ACTIVE = true;
-        return ActionResult.PASS;
+        return super.onUse(state, world, pos, player, hand, hit);
+
     }
 
 }

@@ -6,9 +6,9 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.recipe.*;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,8 +46,39 @@ public class InterRiftwaysLeafItem extends Item {
         nbt.putString(NBT_SERVERIP_KEY, stack.getName().getString());
         stack.setNbt(nbt);
         stack.removeCustomName();
-        stack.setCustomName(Text.literal("§5§kO").append("§l"+SeedlightRiftwaysItems.INTERRIFTWAYS_LEAF.getName()).append(" §5§kO"));
+        stack.setCustomName(Text.literal("§5§kO§l ").append(SeedlightRiftwaysItems.INTERRIFTWAYS_LEAF.getName()).append(" §5§kO"));
 
+    }
+
+    @Override
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        try{
+            //Spawns the first bit of particles
+            /*for(Vec3d pos : RiftwayParticlesUtil.getRectanglePerimeter(1, 1, user.getPos().add(0, 1 ,0), 0.4, 0.4, 30)){
+                world.addParticle(RiftParticles.RIFTWAY_BEGIN_TELEPORT_PARTICLE, pos.x, pos.y+(user.getRandom().nextInt(10) / 10), pos.z, 0,0,0);
+            }
+
+            //The lowest point of the partucles
+            for(Vec3d pos : RiftwayParticlesUtil.getRectanglePerimeter(1, 1, user.getPos().add(0, 0.25 ,0), 0.6, 0.6, 30)){
+                world.addParticle(RiftParticles.RIFTWAY_BEGIN_TELEPORT_PARTICLE, pos.x, pos.y+(user.getRandom().nextInt(10) / 10), pos.z, 0,0,0);
+            }
+
+            for(Vec3d pos : RiftwayParticlesUtil.getRectanglePerimeter(1, 1, user.getPos().add(0, 0.45 ,0), 0.55, 0.55, 30)){
+                world.addParticle(RiftParticles.RIFTWAY_BEGIN_TELEPORT_PARTICLE, pos.x, pos.y+(user.getRandom().nextInt(10) / 10), pos.z, 0,0,0);
+            }
+
+            for(Vec3d pos : RiftwayParticlesUtil.getRectanglePerimeter(1, 1, user.getPos().add(0, 0.65 ,0), 0.48, 0.48, 30)){
+                world.addParticle(RiftParticles.RIFTWAY_BEGIN_TELEPORT_PARTICLE, pos.x, pos.y+(user.getRandom().nextInt(10) / 10), pos.z, 0,0,0);
+            }
+
+            for(Vec3d pos : RiftwayParticlesUtil.getRectanglePerimeter(1, 1, user.getPos().add(0,  1.25,0), 0.3, 0.3, 30)){
+                world.addParticle(RiftParticles.RIFTWAY_BEGIN_TELEPORT_PARTICLE, pos.x, pos.y+(user.getRandom().nextInt(10) / 10), pos.z, 0,0,0);
+            }*/
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return super.use(world, user, hand);
     }
 
     @Override

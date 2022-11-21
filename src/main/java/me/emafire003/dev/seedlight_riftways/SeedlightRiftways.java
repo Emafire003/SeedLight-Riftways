@@ -1,15 +1,23 @@
 package me.emafire003.dev.seedlight_riftways;
 
+import io.netty.handler.address.ResolveAddressHandler;
 import me.emafire003.dev.seedlight_riftways.blocks.SLRBlocks;
 import me.emafire003.dev.seedlight_riftways.items.SeedlightRiftwaysItems;
+import me.emafire003.dev.seedlight_riftways.networking.ServerPacketsListener;
+import me.emafire003.dev.seedlight_riftways.particles.RiftParticles;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.file.Path;
-import java.time.format.TextStyle;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,83 +28,38 @@ public class SeedlightRiftways implements ModInitializer {
     public static final Path PATH = Path.of(FabricLoader.getInstance().getConfigDir() + "/" + MOD_ID + "/");
     public static final String PREFIX = "§b[§5RiftWays§b] ";
 
+    //true equals "Direct Riftway", false means a generic blue one
+    public static HashMap<Boolean, BlockPos> RIFTWAYS_LOCATIONS = new HashMap<>();
+    public static List<String> SERVER_RIFTWAY_ITEMS_PASSWORD = new ArrayList<>();
+
+    public static int LISTENER_PORT = 9000;
+
     @Override
     public void onInitialize() {
         SLRBlocks.registerBlocks();
         SLRBlocks.registerAllBlockEntities();
         SeedlightRiftwaysItems.registerItems();
+        RiftParticles.registerParticles();
+        ServerPacketsListener.registerPacketListeners();
 
     }
 
-    public static boolean isValidIPAddress(String ip)
-    {
+    public static boolean isAddressValid(String address){
+        // Using try Logic So that if there is an error then
+        // easily get the error
+        try {
 
-        // Regex for digit from 0 to 255.
-        String zeroTo255
-                = "(\\d{1,2}|(0|1)\\"
-                + "d{2}|2[0-4]\\d|25[0-5])";
-
-        // Regex for a digit from 0 to 255 and
-        // followed by a dot, repeat 4 times.
-        // this is the regex to validate an IP address.
-        String regex
-                = zeroTo255 + "\\."
-                + zeroTo255 + "\\."
-                + zeroTo255 + "\\."
-                + zeroTo255;
-
-        // Compile the ReGex
-        Pattern p = Pattern.compile(regex);
-
-        // If the IP address is empty
-        // return false
-        if (ip == null) {
+            // calling the function which gives the IP
+            // Address from the given host
+            InetAddress[] iaddress
+                    = InetAddress.getAllByName(address);
+            iaddress[0].toString();
+            return true;
+        }
+        catch (UnknownHostException e) {
+            System.out.println(e);
             return false;
         }
-
-        // Pattern class contains matcher() method
-        // to find matching between given IP address
-        // and regular expression.
-        Matcher m = p.matcher(ip);
-
-        // Return if the IP address
-        // matched the ReGex
-        return m.matches();
     }
 
-    public static boolean isValidPort(String ip)
-    {
-
-        // Regex for digit from 0 to 255.
-        String zeroTo255
-                = "(\\d{1,2}|(0|1)\\"
-                + "d{2}|2[0-4]\\d|25[0-5])";
-
-        // Regex for a digit from 0 to 255 and
-        // followed by a dot, repeat 4 times.
-        // this is the regex to validate an IP address.
-        String regex
-                = zeroTo255 + "\\."
-                + zeroTo255 + "\\."
-                + zeroTo255 + "\\."
-                + zeroTo255;
-
-        // Compile the ReGex
-        Pattern p = Pattern.compile(regex);
-
-        // If the IP address is empty
-        // return false
-        if (ip == null) {
-            return false;
-        }
-
-        // Pattern class contains matcher() method
-        // to find matching between given IP address
-        // and regular expression.
-        Matcher m = p.matcher(ip);
-
-        // Return if the IP address
-        // matched the ReGex
-        return m.matches();
-    }
 }

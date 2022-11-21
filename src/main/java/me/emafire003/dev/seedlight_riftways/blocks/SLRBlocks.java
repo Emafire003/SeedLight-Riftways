@@ -29,9 +29,9 @@ public class SLRBlocks {
     public static final Block RIFTWAY_BLOCK = registerBlock("riftway",
             new RiftWayBlock(FabricBlockSettings.of(Material.AMETHYST).strength(0.7f).collidable(false).luminance(8).sounds(BlockSoundGroup.AMETHYST_BLOCK)), ItemGroup.DECORATIONS);
 
-    public static final Block RIFT_LOG = registerBlock("rift_log",
+    /*public static final Block RIFT_LOG = registerBlock("rift_log",
             createLogBlock(MapColor.CYAN, MapColor.TEAL), ItemGroup.BUILDING_BLOCKS
-    );
+    );*/
 
     //Lore -> this wood is too unstable to be cut into planks!
     public static final Block RIFT_WOOD = registerBlock("rift_wood",

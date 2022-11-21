@@ -5,11 +5,17 @@ import me.emafire003.dev.seedlight_riftways.SeedlightRiftways;
 import java.net.*;
 import java.io.*;
 
+//TODO the "password" could be a list of items which needs to be "given" to the portal. I think i could simply hash it
+//without really salting them or whatever. It's not meant to be a real security feature, authme plugins adn mods exist
 public class Server
 {
     //initialize socket and input stream
+    //static ServerSocket variable
+    private static ServerSocket server;
+    //socket server port on which it will listen
+    private static int port = 9876;
     private Socket          socket   = null;
-    private ServerSocket    server   = null;
+    //private ServerSocket    server   = null;
     private DataInputStream in       =  null;
     private DataOutputStream out     =  null;
 

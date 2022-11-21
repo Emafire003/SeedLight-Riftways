@@ -1,22 +1,28 @@
 package me.emafire003.dev.seedlight_riftways.networking;
 
-import com.mojang.datafixers.util.Pair;
 import io.netty.buffer.Unpooled;
+import me.emafire003.dev.seedlight_riftways.SeedlightRiftways;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-//Needs to send: portal_location, origin_server
+//Needs to send: portal_location, origin_server, is_direct_portal
 //with the option in the future of sending the inventory, the HP, the abilities and such.
+
+//Will create another packet to send LightWithin data maybe
 public class ComingFromRiftwayPacketC2S extends PacketByteBuf {
 
-    public ComingFromRiftwayPacketC2S(BlockPos portal_location, String origin_server) {
+    public static final Identifier ID = new Identifier(SeedlightRiftways.MOD_ID , "coming_from_riftway_packet");
+
+    public ComingFromRiftwayPacketC2S(BlockPos portal_location, String origin_server, boolean is_direct_portal) {
         super(Unpooled.buffer());
-        this.writeInt(2);
+        this.writeInt(3);
         this.writeBlockPos(portal_location);
         this.writeString(origin_server, 50);
+        this.writeBoolean(is_direct_portal);
     }
 
     public static @Nullable BlockPos getOriginPortalPos(PacketByteBuf buf) {
@@ -46,6 +52,23 @@ public class ComingFromRiftwayPacketC2S extends PacketByteBuf {
             //LOGGER.error("There was an error while reading the packet!");
             e.printStackTrace();
             return null;
+        }
+
+    }
+
+    public static @Nullable boolean getIsFromDirectPortal(PacketByteBuf buf) {
+        try {
+            buf.readInt();
+            buf.readBlockPos();
+            buf.readString();
+            return buf.readBoolean();
+        }catch (NoSuchElementException e){
+            //LOGGER.warn("No value in the packet while reading, probably not a big problem");
+            return false;
+        }catch (Exception e){
+            //LOGGER.error("There was an error while reading the packet!");
+            e.printStackTrace();
+            return false;
         }
 
     }

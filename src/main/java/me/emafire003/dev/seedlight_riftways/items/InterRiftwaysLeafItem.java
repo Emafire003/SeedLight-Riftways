@@ -1,6 +1,6 @@
 package me.emafire003.dev.seedlight_riftways.items;
 
-import me.emafire003.dev.seedlight_riftways.SeedlightRiftways;
+import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,7 +26,7 @@ import java.util.List;
 //The seed item may be either found in the end cities or crafted with 2 beacons a nether star and seeds
 public class InterRiftwaysLeafItem extends Item {
 
-    public static final String NBT_SERVERIP_KEY = SeedlightRiftways.MOD_ID + ".serverip";
+    public static final String NBT_SERVERIP_KEY = SeedLightRiftways.MOD_ID + ".serverip";
 
     public InterRiftwaysLeafItem(Settings settings) {
         super(settings);

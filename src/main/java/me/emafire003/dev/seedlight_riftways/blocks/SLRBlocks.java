@@ -1,8 +1,9 @@
 package me.emafire003.dev.seedlight_riftways.blocks;
 
-import me.emafire003.dev.seedlight_riftways.SeedlightRiftways;
+import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
 import me.emafire003.dev.seedlight_riftways.blocks.riftwayblock.RiftWayBlock;
 import me.emafire003.dev.seedlight_riftways.blocks.riftwayblock.RiftWayBlockEntity;
+import me.emafire003.dev.seedlight_riftways.blocks.seedlight_plant.SeedLightPlantBlock;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -23,11 +24,11 @@ public class SLRBlocks {
 
     private static Block registerBlock(String name, Block block, ItemGroup tab) {
         registerBlockItem(name, block, tab);
-        return Registry.register(Registry.BLOCK, new Identifier(SeedlightRiftways.MOD_ID, name), block);
+        return Registry.register(Registry.BLOCK, new Identifier(SeedLightRiftways.MOD_ID, name), block);
     }
 
     public static final Block RIFTWAY_BLOCK = registerBlock("riftway",
-            new RiftWayBlock(FabricBlockSettings.of(Material.AMETHYST).strength(0.7f).collidable(false).luminance(8).sounds(BlockSoundGroup.AMETHYST_BLOCK)), ItemGroup.DECORATIONS);
+            new RiftWayBlock(FabricBlockSettings.of(Material.AMETHYST).strength(-1f).collidable(false).luminance(8).sounds(BlockSoundGroup.AMETHYST_BLOCK)), ItemGroup.DECORATIONS);
 
     /*public static final Block RIFT_LOG = registerBlock("rift_log",
             createLogBlock(MapColor.CYAN, MapColor.TEAL), ItemGroup.BUILDING_BLOCKS
@@ -50,8 +51,18 @@ public class SLRBlocks {
             ItemGroup.DECORATIONS
     );
 
+
+    public static final Block SEEDLIGHT_PLANT = registerBlockWithoutItem("seedlight_plant",
+            new SeedLightPlantBlock(FabricBlockSettings.copy(Blocks.WHEAT)));
+
+
+
+    private static Block registerBlockWithoutItem(String name, Block block) {
+        return Registry.register(Registry.BLOCK, new Identifier(SeedLightRiftways.MOD_ID, name), block);
+    }
+
     private static Item registerBlockItem(String name, Block block, ItemGroup tab) {
-        return Registry.register(Registry.ITEM, new Identifier(SeedlightRiftways.MOD_ID, name),
+        return Registry.register(Registry.ITEM, new Identifier(SeedLightRiftways.MOD_ID, name),
                 new BlockItem(block, new FabricItemSettings().group(tab)));
     }
 
@@ -76,14 +87,14 @@ public class SLRBlocks {
     }
 
     public static void registerBlocks() {
-        SeedlightRiftways.LOGGER.debug("Registering Blocks for " + SeedlightRiftways.MOD_ID);
+        SeedLightRiftways.LOGGER.debug("Registering Blocks for " + SeedLightRiftways.MOD_ID);
     }
 
     public static BlockEntityType<RiftWayBlockEntity> RIFTWAY_BLOCKENTITY;
 
     public static void registerAllBlockEntities() {
         RIFTWAY_BLOCKENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE,
-                new Identifier(SeedlightRiftways.MOD_ID, "square_portal"),
+                new Identifier(SeedLightRiftways.MOD_ID, "square_portal"),
                 FabricBlockEntityTypeBuilder.create(RiftWayBlockEntity::new,
                         RIFTWAY_BLOCK).build());
     }

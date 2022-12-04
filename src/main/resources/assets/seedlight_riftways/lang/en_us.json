@@ -4,7 +4,13 @@
   "block.seedlight_riftways.rift_wood": "Rift Wood",
   "block.seedlight_riftways.seedlight_rift_leaves": "Seedlight Rift Leaves",
   "block.seedlight_riftways.seedlight_rift_flowering_leaves": "Seedlight Rift Flowering Leaves",
+  "block.seedlight_riftways.seedlight_plant": "Seedlight Plant",
   "item.seedlight_riftways.inter_riftways_leaf.tooltip": "A leaf used as a compass? Uh",
   "item.seedlight_riftways.inter_riftways_leaf.tooltip1": "This points towards: ",
-  "item.seedlight_riftways.inter_riftways_leaf": "Inter-Riftways Leaf"
+  "item.seedlight_riftways.inter_riftways_leaf": "Inter-Riftways Leaf",
+
+  "item.seedlight_riftways.seedlight_seed.tooltip1": "§ePlant this peculiar seed in a luminous place",
+  "item.seedlight_riftways.seedlight_seed.tooltip2": "§eand something amazing is going to happen!",
+  "item.seedlight_riftways.seedlight_seed": "Seedlight Seed",
+  "item.seedlight_riftways.seedlight_plant": "Seedlight Plant"
 }

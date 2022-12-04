@@ -19,7 +19,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "me.emafire003.dev.seedlight_riftways.SeedlightRiftways"
+      "me.emafire003.dev.seedlight_riftways.SeedLightRiftways"
     ],
     "client": [
       "me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient"

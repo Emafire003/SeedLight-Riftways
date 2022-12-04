@@ -1,19 +1,22 @@
 package me.emafire003.dev.seedlight_riftways.networking;
 
-import me.emafire003.dev.seedlight_riftways.SeedlightRiftways;
-import me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient;
+import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static me.emafire003.dev.seedlight_riftways.SeedLightRiftways.LOGGER;
 
 public class RiftwayServerInfo implements Runnable {
 
     //static ServerSocket variable
     private static ServerSocket server;
     //socket server port on which it will listen
-    private static int port = SeedlightRiftways.LISTENER_PORT;
+    private static int port = SeedLightRiftways.LISTENER_PORT;
 
     public static void start(){
 
@@ -33,22 +36,26 @@ public class RiftwayServerInfo implements Runnable {
     @Override
     public void run() {
         //create the socket server object
+        LOGGER.info("Listener server started!");
         try {
             server = new ServerSocket(port);
+            AtomicBoolean stopserver = new AtomicBoolean(false);
+            ServerLifecycleEvents.SERVER_STOPPING.register(mcserver -> {
+                stopserver.set(true);
+            });
             //keep listens indefinitely until receives 'exit' call or program terminates
-            while(true){
-                System.out.println("Waiting for the client request");
+            while(!stopserver.get()){
                 //creating socket and waiting for client connection
                 Socket socket = server.accept();
                 //read from socket to ObjectInputStream object
                 ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
                 //convert ObjectInputStream object to String
                 String message = (String) ois.readObject();
-                System.out.println("Message Received: " + message);
+                LOGGER.info("Message Received: " + message);
                 //create ObjectOutputStream object
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                 //write object to Socket
-                if(SeedlightRiftways.RIFTWAYS_LOCATIONS.isEmpty()){
+                if(SeedLightRiftways.RIFTWAYS_LOCATIONS.isEmpty() || !SeedLightRiftways.IS_RIFTWAY_ACTIVE){
                     oos.writeUTF("no_riftways");
                 }else if(message.equalsIgnoreCase("diamond"))//TODO I would need a check for the list of items as password
                 {
@@ -60,12 +67,11 @@ public class RiftwayServerInfo implements Runnable {
                 ois.close();
                 oos.close();
                 socket.close();
-                //terminate the server if client sends exit request
-                //if(message.equalsIgnoreCase("exit")) break;
             }
             /*System.out.println("Shutting down Socket server!!");
             //close the ServerSocket object
             server.close();*/
+
         }catch (Exception e) {
             e.printStackTrace();
         }

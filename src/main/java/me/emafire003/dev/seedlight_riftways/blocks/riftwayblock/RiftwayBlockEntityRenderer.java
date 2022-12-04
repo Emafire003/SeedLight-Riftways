@@ -1,6 +1,6 @@
 package me.emafire003.dev.seedlight_riftways.blocks.riftwayblock;
 
-import me.emafire003.dev.seedlight_riftways.SeedlightRiftways;
+import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
 import me.emafire003.dev.seedlight_riftways.client.SLRRenderLayers;
 import me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient;
 import net.fabricmc.api.EnvType;
@@ -14,9 +14,9 @@ import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
 public class RiftwayBlockEntityRenderer extends EndPortalBlockEntityRenderer<RiftWayBlockEntity> {
-    public static final Identifier PORTAL_TEXTURE_INACTIVE = new Identifier(SeedlightRiftways.MOD_ID, "textures/entity/riftway_inactive.png");
+    public static final Identifier PORTAL_TEXTURE_INACTIVE = new Identifier(SeedLightRiftways.MOD_ID, "textures/entity/riftway_inactive.png");
     public static final Identifier SKY_TEXTURE = new Identifier("textures/environment/portal_sky.png");
-    public static final Identifier PORTAL_TEXTURE = new Identifier(SeedlightRiftways.MOD_ID, "textures/entity/riftway.png");
+    public static final Identifier PORTAL_TEXTURE = new Identifier(SeedLightRiftways.MOD_ID, "textures/entity/riftway.png");
 
     public RiftwayBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
         super(context);

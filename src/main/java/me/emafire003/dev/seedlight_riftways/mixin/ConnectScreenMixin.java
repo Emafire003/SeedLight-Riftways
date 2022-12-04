@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static me.emafire003.dev.seedlight_riftways.SeedlightRiftways.LOGGER;
+import static me.emafire003.dev.seedlight_riftways.SeedLightRiftways.LOGGER;
 
 @Mixin(ConnectScreen.class)
 public class ConnectScreenMixin {

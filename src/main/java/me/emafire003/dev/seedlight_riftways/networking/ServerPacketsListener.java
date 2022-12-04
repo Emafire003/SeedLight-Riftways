@@ -1,6 +1,6 @@
 package me.emafire003.dev.seedlight_riftways.networking;
 
-import me.emafire003.dev.seedlight_riftways.SeedlightRiftways;
+import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -28,12 +28,13 @@ public class ServerPacketsListener {
                     player.sendMessage(Text.literal("DEUBUG: Origin server: " + origin_server));
                     player.sendMessage(Text.literal("DEUBUG: Origin server pos: " + origin_rift_pos));
                 }catch (NoSuchElementException e){
-                    SeedlightRiftways.LOGGER.warn("No value in the packet, probably not a big problem");
+                    SeedLightRiftways.LOGGER.warn("No value in the packet, probably not a big problem");
                 }catch (Exception e){
-                    SeedlightRiftways.LOGGER.error("There was an error while getting the packet!");
+                    SeedLightRiftways.LOGGER.error("There was an error while getting the packet!");
                     e.printStackTrace();
                 }
             });
         })));
     }
+
 }

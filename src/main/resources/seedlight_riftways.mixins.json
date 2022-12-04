@@ -4,7 +4,9 @@
   "package": "me.emafire003.dev.seedlight_riftways.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "AnvilScreenHandlerMixin"
+    "AnvilScreenHandlerMixin",
+    "PotionEntityMixin",
+    "PlayerJoinMixin"
   ],
   "client": [
     "ConnectScreenMixin",

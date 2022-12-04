@@ -9,8 +9,6 @@ import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.block.entity.EndPortalBlockEntityRenderer;
 
-import java.util.Random;
-
 @Environment(EnvType.CLIENT)
 public class SLRRenderLayers extends RenderLayer {
 

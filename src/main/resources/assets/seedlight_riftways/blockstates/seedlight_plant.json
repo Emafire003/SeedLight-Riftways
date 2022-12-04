@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "age=0": { "model": "seedlight_riftways:block/seedlight_plant/seedlight_plant_stage0" },
+    "age=1": { "model": "seedlight_riftways:block/seedlight_plant/seedlight_plant_stage1" },
+    "age=2": { "model": "seedlight_riftways:block/seedlight_plant/seedlight_plant_stage2" },
+    "age=3": { "model": "seedlight_riftways:block/seedlight_plant/seedlight_plant_stage3" },
+    "age=4": { "model": "seedlight_riftways:block/seedlight_plant/seedlight_plant_stage4" },
+    "age=5": { "model": "seedlight_riftways:block/seedlight_plant/seedlight_plant_stage5" },
+    "age=6": { "model": "seedlight_riftways:block/seedlight_plant/seedlight_plant_stage6" }
+  }
+}

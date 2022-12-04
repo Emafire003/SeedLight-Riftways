@@ -27,10 +27,15 @@ repositories {
 			includeGroup "maven.modrinth"
 		}
 	}
+
 	maven {
-		name = "CottonMC"
-		url = "https://server.bbkr.space/artifactory/libs-release"
+		url "https://maven.terraformersmc.com/releases/"
+		content {
+			includeGroup "com.terraformersmc"
+		}
 	}
+
+	maven { url = "https://maven.isxander.dev/releases" }
 }
 
 dependencies {
@@ -48,8 +53,13 @@ dependencies {
 	// modImplementation "net.fabricmc.fabric-api:fabric-api-deprecated:${project.fabric_version}"
 
 	//Structures
-	modImplementation "maven.modrinth:structureplacerapi:1.0.1"
-	include "maven.modrinth:structureplacerapi:1.0.1"
+	modImplementation "maven.modrinth:structureplacerapi:${project.structureplacerapi_version}"
+	include "maven.modrinth:structureplacerapi:${project.structureplacerapi_version}"
+
+	//Config Lib
+	modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
+	include "dev.isxander:yet-another-config-lib:${project.yacl_version}"
+	modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 
 }
 

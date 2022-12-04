@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/crop",
+  "textures": {
+    "crop": "seedlight_riftways:block/seedlight_plant/seedlight_plant_stage0"
+  }
+}

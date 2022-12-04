@@ -1,7 +1,7 @@
 package me.emafire003.dev.seedlight_riftways.networking;
 
 import io.netty.buffer.Unpooled;
-import me.emafire003.dev.seedlight_riftways.SeedlightRiftways;
+import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -15,19 +15,17 @@ import java.util.*;
 //Will create another packet to send LightWithin data maybe
 public class ComingFromRiftwayPacketC2S extends PacketByteBuf {
 
-    public static final Identifier ID = new Identifier(SeedlightRiftways.MOD_ID , "coming_from_riftway_packet");
+    public static final Identifier ID = new Identifier(SeedLightRiftways.MOD_ID , "coming_from_riftway_packet");
 
     public ComingFromRiftwayPacketC2S(BlockPos portal_location, String origin_server, boolean is_direct_portal) {
         super(Unpooled.buffer());
-        this.writeInt(3);
         this.writeBlockPos(portal_location);
-        this.writeString(origin_server, 50);
+        this.writeString(origin_server);
         this.writeBoolean(is_direct_portal);
     }
 
     public static @Nullable BlockPos getOriginPortalPos(PacketByteBuf buf) {
         try {
-            buf.readInt();
             return buf.readBlockPos();
         }catch (NoSuchElementException e){
             //LOGGER.warn("No value in the packet while reading, probably not a big problem");
@@ -42,7 +40,6 @@ public class ComingFromRiftwayPacketC2S extends PacketByteBuf {
 
     public static @Nullable String getOriginServer(PacketByteBuf buf) {
         try {
-            buf.readInt();
             buf.readBlockPos();
             return buf.readString();
         }catch (NoSuchElementException e){
@@ -58,7 +55,6 @@ public class ComingFromRiftwayPacketC2S extends PacketByteBuf {
 
     public static @Nullable boolean getIsFromDirectPortal(PacketByteBuf buf) {
         try {
-            buf.readInt();
             buf.readBlockPos();
             buf.readString();
             return buf.readBoolean();

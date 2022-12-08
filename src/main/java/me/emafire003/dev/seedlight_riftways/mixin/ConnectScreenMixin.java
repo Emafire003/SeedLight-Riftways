@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static me.emafire003.dev.seedlight_riftways.SeedLightRiftways.LOGGER;
 
 @Mixin(ConnectScreen.class)
-public class ConnectScreenMixin {
+public abstract class ConnectScreenMixin {
 
 
 

@@ -3,7 +3,7 @@ package me.emafire003.dev.seedlight_riftways;
 import me.emafire003.dev.seedlight_riftways.blocks.SLRBlocks;
 import me.emafire003.dev.seedlight_riftways.events.PlayerJoinServerCallback;
 import me.emafire003.dev.seedlight_riftways.items.SeedlightRiftwaysItems;
-import me.emafire003.dev.seedlight_riftways.networking.RiftwayServerInfo;
+import me.emafire003.dev.seedlight_riftways.networking.RiftwayListener;
 import me.emafire003.dev.seedlight_riftways.networking.ServerPacketsListener;
 import me.emafire003.dev.seedlight_riftways.networking.UpdateRiftwayActivenessS2C;
 import me.emafire003.dev.seedlight_riftways.networking.UpdateRiftwayIpS2C;
@@ -51,7 +51,7 @@ public class SeedLightRiftways implements ModInitializer {
         PlayerJoinServerCallback.registerEvents();
         LootTableModifier.modifyLootTables();
         LOGGER.info("Starting Listener server...");
-        Thread listener_thread = new Thread(new RiftwayServerInfo());
+        Thread listener_thread = new Thread(new RiftwayListener());
         listener_thread.setName(MOD_ID + " Listener_Thread");
         listener_thread.start();
     }

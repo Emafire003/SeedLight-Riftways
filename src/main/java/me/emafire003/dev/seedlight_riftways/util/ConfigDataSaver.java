@@ -1,12 +1,8 @@
 package me.emafire003.dev.seedlight_riftways.util;
 
-import com.google.common.reflect.TypeToken;
 import dev.isxander.yacl.config.ConfigEntry;
 import dev.isxander.yacl.config.GsonConfigInstance;
 import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.TitleScreen;
-import net.minecraft.util.math.BlockPos;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,9 +29,9 @@ public class ConfigDataSaver {
     @ConfigEntry
     public int listener_port = SeedLightRiftways.getListenerPort();
 
-    public Screen createGui(Screen parent) {
+    /*public Screen createGui(Screen parent) {
         // time to use YOCL!
         return new TitleScreen();
-    }
+    }*/
 
 }

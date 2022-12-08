@@ -6,7 +6,9 @@
   "mixins": [
     "AnvilScreenHandlerMixin",
     "PotionEntityMixin",
-    "PlayerJoinMixin"
+    "PlayerJoinMixin",
+    "BundleItemInvoker",
+    "BundleItemUndropMixin"
   ],
   "client": [
     "ConnectScreenMixin",

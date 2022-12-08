@@ -1,14 +1,12 @@
 package me.emafire003.dev.seedlight_riftways.blocks.riftwayblock;
 
 import com.mojang.logging.LogUtils;
+import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
 import me.emafire003.dev.seedlight_riftways.blocks.SLRBlocks;
 import me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.EndPortalBlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.sound.SoundManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
@@ -37,12 +35,6 @@ public class RiftWayBlockEntity extends EndPortalBlockEntity {
         if (!list.isEmpty()) {
             if(SeedLightRiftwaysClient.IS_RIFTWAY_ACTIVE){
                 if(!SeedLightRiftwaysClient.connection_initialised){
-                    SoundManager soundManager = MinecraftClient.getInstance().getSoundManager();
-                    soundManager.play(PositionedSoundInstance.master(SoundEvents.BLOCK_PORTAL_TRAVEL, 0.2f));
-                    soundManager.play(PositionedSoundInstance.master(SoundEvents.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 0.25f));
-                    soundManager.play(PositionedSoundInstance.master(SoundEvents.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 0.25f));
-                    soundManager.play(PositionedSoundInstance.master(SoundEvents.BLOCK_PORTAL_TRAVEL, 1.7f));
-                    soundManager.play(PositionedSoundInstance.master(SoundEvents.BLOCK_PORTAL_TRIGGER, 0.1f));
                     SeedLightRiftwaysClient.setDepartureBlockpos(pos);
                     //SeedLightRiftwaysClient.connectToServer();
                     SeedLightRiftwaysClient.startConnectionToServer();
@@ -67,7 +59,7 @@ public class RiftWayBlockEntity extends EndPortalBlockEntity {
         //TODO and sprinkle some cool SFX too. Oh and maybe use shaders "during teleport"
         //TODO to teleport the player back, I should make it just before shutting down the server
         if (!list.isEmpty()) {
-            if(!SeedLightRiftwaysClient.IS_RIFTWAY_ACTIVE){
+            if(!SeedLightRiftways.IS_RIFTWAY_ACTIVE){
                 for(PlayerEntity player : list){
                     Vec3d backwards_vel = player.getVelocity().multiply(-1);
                     player.setVelocity(backwards_vel.x, backwards_vel.y, backwards_vel.z);
@@ -134,4 +126,40 @@ public class RiftWayBlockEntity extends EndPortalBlockEntity {
 
         return i;
     }
+
+    /*public Vec3d getVelocity(BlockView world, BlockPos pos) {
+        double d = 0.0;
+        double e = 0.0;
+        BlockPos.Mutable mutable = new BlockPos.Mutable();
+        for (Direction direction : Direction.Type.HORIZONTAL) {
+            mutable.set((Vec3i)pos, direction);
+            FluidState fluidState = world.getFluidState(mutable);
+            if (!this.isEmptyOrThis(fluidState)) continue;
+            float f = fluidState.getHeight();
+            float g = 0.0f;
+            if (f == 0.0f) {
+                Vec3i blockPos;
+                FluidState fluidState2;
+                if (!world.getBlockState(mutable).getMaterial().blocksMovement() && this.isEmptyOrThis(fluidState2 = world.getFluidState((BlockPos)(blockPos = mutable.down()))) && (f = fluidState2.getHeight()) > 0.0f) {
+                    g = state.getHeight() - (f - 0.8888889f);
+                }
+            } else if (f > 0.0f) {
+                g = state.getHeight() - f;
+            }
+            if (g == 0.0f) continue;
+            d += (double)((float)direction.getOffsetX() * g);
+            e += (double)((float)direction.getOffsetZ() * g);
+        }
+        Vec3d vec3d = new Vec3d(d, 0.0, e);
+        if (state.get(FALLING).booleanValue()) {
+            for (Direction direction2 : Direction.Type.HORIZONTAL) {
+                mutable.set((Vec3i)pos, direction2);
+                if (!this.method_15749(world, mutable, direction2) && !this.method_15749(world, (BlockPos)mutable.up(), direction2)) continue;
+                vec3d = vec3d.normalize().add(0.0, -6.0, 0.0);
+                break;
+            }
+        }
+        BundleItem
+        return vec3d.normalize();
+    }*/
 }

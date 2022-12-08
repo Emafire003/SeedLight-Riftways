@@ -5,7 +5,7 @@ import me.emafire003.dev.seedlight_riftways.blocks.SLRBlocks;
 import me.emafire003.dev.seedlight_riftways.blocks.riftwayblock.RiftwayBlockEntityRenderer;
 import me.emafire003.dev.seedlight_riftways.commands.SLRCommands;
 import me.emafire003.dev.seedlight_riftways.networking.ComingFromRiftwayPacketC2S;
-import me.emafire003.dev.seedlight_riftways.networking.RiftwayClientInfo;
+import me.emafire003.dev.seedlight_riftways.networking.RiftwayClient;
 import me.emafire003.dev.seedlight_riftways.networking.UpdateRiftwayActivenessS2C;
 import me.emafire003.dev.seedlight_riftways.networking.UpdateRiftwayIpS2C;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
@@ -21,7 +21,11 @@ import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.sound.SoundManager;
+import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
@@ -48,6 +52,8 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(SLRBlocks.RIFTWAY_BLOCK, SLRRenderLayers.getRiftway());
         BlockEntityRendererRegistry.register(SLRBlocks.RIFTWAY_BLOCKENTITY, RiftwayBlockEntityRenderer::new);
         BlockRenderLayerMap.INSTANCE.putBlock(SLRBlocks.SEEDLIGHT_PLANT, RenderLayer.getCutout());
+        registerUpdateRiftwayActivenessPacket();
+        registerUpdateRiftwayIpPacket();
     }
 
     private void registerUpdateRiftwayActivenessPacket(){
@@ -114,7 +120,7 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
 
     public static void startConnectionToServer(){
         if(!connection_initialised ){
-            Thread connect_thread = new Thread(new RiftwayClientInfo());
+            Thread connect_thread = new Thread(new RiftwayClient());
             connect_thread.setName(MOD_ID + "New Connection Thread");
             connect_thread.start();
             connection_initialised = true;
@@ -127,10 +133,19 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
                 " §cAn error occurred when trying to connect to that server!"));
         MinecraftClient.getInstance().player.sendMessage(Text.literal(SeedLightRiftways.PREFIX +
                 " §c" + reason));
+        connection_initialised = false;
     }
 
     public static void connectToServer(){
+        LOGGER.info("Whoooh connecting to the other server. I think. This here is the method thingy");
         try{
+            SoundManager soundManager = MinecraftClient.getInstance().getSoundManager();
+            soundManager.play(PositionedSoundInstance.master(SoundEvents.BLOCK_PORTAL_TRAVEL, 0.2f));
+            soundManager.play(PositionedSoundInstance.master(SoundEvents.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 0.25f));
+            soundManager.play(PositionedSoundInstance.master(SoundEvents.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 0.25f));
+            soundManager.play(PositionedSoundInstance.master(SoundEvents.BLOCK_PORTAL_TRAVEL, 1.7f));
+            soundManager.play(PositionedSoundInstance.master(SoundEvents.BLOCK_PORTAL_TRIGGER, 0.1f));
+
             ServerInfo serverInfo = new ServerInfo("riftway_to_"+SERVER_IP, SERVER_IP, false);
             LOGGER.info("Trying to disconnect player form world...");
             disconnect(MinecraftClient.getInstance());

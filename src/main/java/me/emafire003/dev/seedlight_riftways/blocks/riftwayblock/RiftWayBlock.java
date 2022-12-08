@@ -4,6 +4,7 @@ import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
 import me.emafire003.dev.seedlight_riftways.blocks.SLRBlocks;
 import me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient;
 import me.emafire003.dev.seedlight_riftways.items.InterRiftwaysLeafItem;
+import me.emafire003.dev.seedlight_riftways.mixin.BundleItemInvoker;
 import me.emafire003.dev.seedlight_riftways.util.CheckValidAddress;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -27,7 +28,10 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import static me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient.SERVER_IP;
 import static me.emafire003.dev.seedlight_riftways.items.InterRiftwaysLeafItem.NBT_SERVERIP_KEY;
@@ -89,6 +93,7 @@ public class RiftWayBlock extends BlockWithEntity {
 
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack itemStack = player.getStackInHand(hand);
+
         if((itemStack.getItem() instanceof InterRiftwaysLeafItem)){
             if(itemStack.getNbt().get(NBT_SERVERIP_KEY) == null || itemStack.getNbt().getString(NBT_SERVERIP_KEY).equalsIgnoreCase("")){
                 return super.onUse(state, world, pos, player, hand, hit);
@@ -98,7 +103,7 @@ public class RiftWayBlock extends BlockWithEntity {
             if(!player.getWorld().isClient){
                 SeedLightRiftways.SAVED_SERVER_IP = itemStack.getNbt().getString(NBT_SERVERIP_KEY);
                 //TODO lang translatable
-                player.sendMessage(Text.literal(SeedLightRiftways.PREFIX+" §bA new destination has been set for the portal, §d" + SERVER_IP));
+                player.sendMessage(Text.literal(SeedLightRiftways.PREFIX+" §bA new destination has been set for the portal, §d" + SeedLightRiftways.SAVED_SERVER_IP));
                 SeedLightRiftways.IS_RIFTWAY_ACTIVE = true;
                 //Updates the saved stuff
                 SeedLightRiftways.updateConfig();
@@ -144,9 +149,16 @@ public class RiftWayBlock extends BlockWithEntity {
             }
 
             return ActionResult.PASS;
-        }else if(itemStack.getItem() instanceof BundleItem){
-            BundleItem bundle = (BundleItem) itemStack.getItem();
-            //bundle.getBundleStacks()
+        }else if(itemStack.getItem() instanceof BundleItem && player.hasPermissionLevel(2)){
+            //BundleItemInvoker bundle = (BundleItemInvoker) itemStack.getItem();
+            Stream<ItemStack> items = BundleItemInvoker.getBundledStacksInv(itemStack);
+            SeedLightRiftways.SERVER_RIFTWAY_ITEMS_PASSWORD.clear();
+            items.forEach(itemStack1 -> {
+                SeedLightRiftways.SERVER_RIFTWAY_ITEMS_PASSWORD.add(itemStack1.getItem().getName().getString().toString());
+            });
+            player.sendMessage(Text.literal(SeedLightRiftways.PREFIX+" §bThe item combination to access this world has been changed!"));
+            player.sendMessage(Text.literal(SeedLightRiftways.PREFIX+" §bIt now is: §a" + SeedLightRiftways.SERVER_RIFTWAY_ITEMS_PASSWORD.toString()));
+            SeedLightRiftways.updateConfig();
         }
         return super.onUse(state, world, pos, player, hand, hit);
 

@@ -2,7 +2,10 @@ package me.emafire003.dev.seedlight_riftways.events;
 
 import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
 import me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+
+import static me.emafire003.dev.seedlight_riftways.SeedLightRiftways.LOGGER;
 
 public class PlayerJoinServerCallback {
 
@@ -23,7 +26,9 @@ public class PlayerJoinServerCallback {
     public static void registerJoinFromRiftwayEvent(){
         PlayerJoinEvent.EVENT.register((player, server) -> {
             if(player.getWorld().isClient){
-                SeedLightRiftwaysClient.sendComingFromRiftwayPacket(player, "localhost", false);;
+                LOGGER.info("------------Sending COMING FROM RIFTWAY PACKET-----------------");
+                player.sendMessage(Text.literal("------------Sending COMING FROM RIFTWAY PACKET-----------------"));
+                SeedLightRiftwaysClient.sendComingFromRiftwayPacket(player, "tests", false);;
             }
             return ActionResult.PASS;
         });

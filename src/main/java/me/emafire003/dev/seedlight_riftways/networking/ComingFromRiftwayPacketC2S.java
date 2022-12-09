@@ -12,6 +12,8 @@ import java.util.*;
 //Needs to send: portal_location, origin_server, is_direct_portal
 //with the option in the future of sending the inventory, the HP, the abilities and such.
 
+//TODO actually implement the rest of this stuff
+
 //Will create another packet to send LightWithin data maybe
 public class ComingFromRiftwayPacketC2S extends PacketByteBuf {
 

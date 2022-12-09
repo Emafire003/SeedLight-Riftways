@@ -112,10 +112,8 @@ class ClientHandler extends Thread
     {
         String received;
         String toreturn;
-        while (true)
-        {
-            try {
-
+        try{
+            while (true) {
                 // Ask user what he wants
                 //dos.writeUTF("What do you want?[Date | Time]..\n"+ "Type Exit to terminate connection.");
 
@@ -148,20 +146,21 @@ class ClientHandler extends Thread
                     dos.writeUTF(toreturn);
                     LOGGER.info("Sending 'wrong_password' to client");
                 }
+            }//end of the while
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        try
-        {
             // closing resources
             this.dis.close();
             this.dos.close();
-
-        }catch(IOException e){
+        }catch (IOException e){
+            try{
+                this.dis.close();
+                this.dos.close();
+                this.s.close();
+            }catch (Exception exc){
+                exc.printStackTrace();
+            }
             e.printStackTrace();
         }
+
     }
 }

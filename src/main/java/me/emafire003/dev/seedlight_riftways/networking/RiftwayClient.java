@@ -4,6 +4,7 @@ import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
 import me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -65,9 +66,9 @@ public class RiftwayClient implements Runnable{
                     String received = dis.readUTF();
                     LOGGER.info("The server said: " + received);
 
-                    if(received.equalsIgnoreCase("canConnect")){
-                        LOGGER.info("Whoooh connecting to the other server. I think");
-                        SeedLightRiftwaysClient.connectToServer();
+                    if(received.equalsIgnoreCase("can_connect")){
+                        LOGGER.info("Whoooh connecting to the other server. I think. Hopefully");
+                        SeedLightRiftwaysClient.setConnectionAllowed();
                         tosend = "exit";
                         dos.writeUTF(tosend);
                         break;

@@ -1,6 +1,7 @@
 package me.emafire003.dev.seedlight_riftways.events;
 
 import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
+import me.emafire003.dev.seedlight_riftways.blocks.riftwayblock.RiftWayBlockEntity;
 import me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -14,12 +15,13 @@ public class PlayerJoinServerCallback {
 
     public static void registerJoinEvent(){
         PlayerJoinEvent.EVENT.register((player, server) -> {
-            LOGGER.info(player.getName()+" has joined the server!");
             if(player.getWorld().isClient){
                 return ActionResult.PASS;
             }else{
                 SeedLightRiftways.sendUpdateRiftwayPacket(player);
             }
+            //TODO modify cooldown if config needs it (somehow it's not 20 ticks = 1 second
+            RiftWayBlockEntity.players_on_cooldown.put(player.getUuid(), RiftWayBlockEntity.RIFTWAY_COOLDOWN);
             return ActionResult.PASS;
         });
     }

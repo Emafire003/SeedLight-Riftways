@@ -2,6 +2,7 @@ package me.emafire003.dev.seedlight_riftways.networking;
 
 import io.netty.buffer.Unpooled;
 import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
+import net.minecraft.block.entity.EndGatewayBlockEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;

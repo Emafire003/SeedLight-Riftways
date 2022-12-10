@@ -7,6 +7,7 @@ import me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.EndPortalBlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
@@ -17,10 +18,16 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.slf4j.Logger;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class RiftWayBlockEntity extends EndPortalBlockEntity {
     private static final Logger LOGGER = LogUtils.getLogger();
+    public static HashMap<UUID, Integer> players_on_cooldown = new HashMap<>();
+    //TODO maybe make this configurable
+    public static int RIFTWAY_COOLDOWN = 5*2000;
 
     public RiftWayBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(SLRBlocks.RIFTWAY_BLOCKENTITY, blockPos, blockState);
@@ -32,22 +39,42 @@ public class RiftWayBlockEntity extends EndPortalBlockEntity {
         //TODO also, when the player gets teleported I should make them invisible, and then sprinkle particles around them
         //TODO and sprinkle some cool SFX too. Oh and maybe use shaders "during teleport"
         //TODO to teleport the player back, I should make it just before shutting down the server
-        if (!list.isEmpty()) {
+        if (!list.isEmpty() && list.contains(MinecraftClient.getInstance().player)) {
             if(SeedLightRiftwaysClient.IS_RIFTWAY_ACTIVE){
-                if(!SeedLightRiftwaysClient.connection_initialised){
+                LOGGER.info("Is player in cooldown: " + players_on_cooldown.containsKey(MinecraftClient.getInstance().player.getUuid()));
+                LOGGER.info("Cooldown list: " + players_on_cooldown);
+                if(!SeedLightRiftwaysClient.connection_initialised && !players_on_cooldown.containsKey(MinecraftClient.getInstance().player.getUuid())){
                     SeedLightRiftwaysClient.setDepartureBlockpos(pos);
                     //SeedLightRiftwaysClient.connectToServer();
+                    //TODO config the delay between teleports? Currently it's 10 seconds
+                    players_on_cooldown.put(MinecraftClient.getInstance().player.getUuid(), RIFTWAY_COOLDOWN);
                     SeedLightRiftwaysClient.startConnectionToServer();
                 }
 
 
             }else{
                 for(PlayerEntity player : list){
-                    Vec3d backwards_vel = player.getVelocity().multiply(-1);
-                    player.setVelocityClient(backwards_vel.x, backwards_vel.y, backwards_vel.z);
+                    if(player.isSpectator()){
+                        continue;
+                    }
+                    Vec3d v = Vec3d.ofCenter(pos).add(.5, .5, .5).subtract(player.getPos());
+                    v = v.multiply(1, 0.00001, 1).multiply(-1.5);
+                    v = v.normalize().multiply(.5);
+                    //Vec3d backwards_vel = player.getVelocity().multiply(-1);
+                    //player.setVelocity(backwards_vel.x, backwards_vel.y, backwards_vel.z);
+                    player.setVelocityClient(v.x, v.y, v.z);
+                    player.setVelocity(v);
                 }
             }
 
+        }
+        //This ticks the cooldown and lowers it each tick by one (client side)
+        for(Map.Entry<UUID, Integer> entry : players_on_cooldown.entrySet()){
+            if(entry.getValue()-1 == 0){
+                players_on_cooldown.remove(entry.getKey());
+            }else{
+                players_on_cooldown.put(entry.getKey(), entry.getValue()-1);
+            }
         }
 
     }
@@ -61,13 +88,25 @@ public class RiftWayBlockEntity extends EndPortalBlockEntity {
         if (!list.isEmpty()) {
             if(!SeedLightRiftways.IS_RIFTWAY_ACTIVE){
                 for(PlayerEntity player : list){
-                    Vec3d backwards_vel = player.getVelocity().multiply(-1);
-                    player.setVelocity(backwards_vel.x, backwards_vel.y, backwards_vel.z);
+                    if(player.isSpectator()){
+                        continue;
+                    }
+                    Vec3d v = Vec3d.ofCenter(pos).add(.5, .5, .5).subtract(player.getPos());
+                    v = v.multiply(-1, 0.00001, -1).multiply(1.5);
+                    v = v.normalize().multiply(.5);
+                    //Vec3d backwards_vel = player.getVelocity().multiply(-1);
+                    //player.setVelocity(backwards_vel.x, backwards_vel.y, backwards_vel.z);
+                    player.setVelocityClient(v.x, v.y, v.z);
+                    player.setVelocity(v);
                 }
             }else{
                 for(PlayerEntity player : list){
-                    if(player != null){
-                        player.setPosition(Vec3d.ofCenter(pos.add(-2, 0, 0)));
+                    LOGGER.info("Is player in cooldown: " + players_on_cooldown.containsKey(player.getUuid()));
+                    LOGGER.info("Cooldown list: " + players_on_cooldown);
+                    if(player != null && !players_on_cooldown.containsKey(player.getUuid())){
+                        //TODO config the delay between teleports? Currently it's 10 seconds
+                        players_on_cooldown.put(player.getUuid(), RIFTWAY_COOLDOWN);
+                        //player.setPosition(Vec3d.ofCenter(pos.add(-2, 0, 0)));
                         //execute at @a run particle minecraft:end_rod ~ ~ ~ 0.03 0.85 0.03 0.15 200
                         ((ServerWorld) world).spawnParticles(ParticleTypes.END_ROD, player.getX(), player.getY(), player.getZ(), 200, 0.03, 0.85, 0.03, 0.15);
                         //execute at @a run particle minecraft:dragon_breath ~ ~0.5 ~ 0.2 0.7 0.2 0.15 200
@@ -83,11 +122,18 @@ public class RiftWayBlockEntity extends EndPortalBlockEntity {
                         player.playSound(SoundEvents.BLOCK_PORTAL_TRAVEL, 1f, 1.7f);
                         player.playSound(SoundEvents.BLOCK_PORTAL_TRIGGER, 1f, 0.1f);
 
-
                     }
                 }
             }
+        }
 
+        //This ticks the cooldown and lowers it each tick by one
+        for(Map.Entry<UUID, Integer> entry : players_on_cooldown.entrySet()){
+            if(entry.getValue()-1 == 0){
+                players_on_cooldown.remove(entry.getKey());
+            }else{
+                players_on_cooldown.put(entry.getKey(), entry.getValue()-1);
+            }
         }
 
     }
@@ -103,6 +149,7 @@ public class RiftWayBlockEntity extends EndPortalBlockEntity {
 
     public boolean onSyncedBlockEvent(int type, int data) {
         if (type == 1) {
+            //this.teleportCooldown = 40;
             return true;
         } else {
             return super.onSyncedBlockEvent(type, data);
@@ -126,40 +173,5 @@ public class RiftWayBlockEntity extends EndPortalBlockEntity {
 
         return i;
     }
-
-    /*public Vec3d getVelocity(BlockView world, BlockPos pos) {
-        double d = 0.0;
-        double e = 0.0;
-        BlockPos.Mutable mutable = new BlockPos.Mutable();
-        for (Direction direction : Direction.Type.HORIZONTAL) {
-            mutable.set((Vec3i)pos, direction);
-            FluidState fluidState = world.getFluidState(mutable);
-            if (!this.isEmptyOrThis(fluidState)) continue;
-            float f = fluidState.getHeight();
-            float g = 0.0f;
-            if (f == 0.0f) {
-                Vec3i blockPos;
-                FluidState fluidState2;
-                if (!world.getBlockState(mutable).getMaterial().blocksMovement() && this.isEmptyOrThis(fluidState2 = world.getFluidState((BlockPos)(blockPos = mutable.down()))) && (f = fluidState2.getHeight()) > 0.0f) {
-                    g = state.getHeight() - (f - 0.8888889f);
-                }
-            } else if (f > 0.0f) {
-                g = state.getHeight() - f;
-            }
-            if (g == 0.0f) continue;
-            d += (double)((float)direction.getOffsetX() * g);
-            e += (double)((float)direction.getOffsetZ() * g);
-        }
-        Vec3d vec3d = new Vec3d(d, 0.0, e);
-        if (state.get(FALLING).booleanValue()) {
-            for (Direction direction2 : Direction.Type.HORIZONTAL) {
-                mutable.set((Vec3i)pos, direction2);
-                if (!this.method_15749(world, mutable, direction2) && !this.method_15749(world, (BlockPos)mutable.up(), direction2)) continue;
-                vec3d = vec3d.normalize().add(0.0, -6.0, 0.0);
-                break;
-            }
-        }
-        BundleItem
-        return vec3d.normalize();
-    }*/
+    
 }

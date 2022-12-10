@@ -80,29 +80,6 @@ public class SeedLightPlantBlock extends CropBlock {
         placer.loadStructure();
     }
 
-    /*@Override
-    public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
-        SeedLightRiftways.LOGGER.info("-----> Grow method called: " + getMaxAge());
-        this.applyGrowth(world, pos, state);
-    }
-
-    @Override
-    public void applyGrowth(World world, BlockPos pos, BlockState state) {
-        SeedLightRiftways.LOGGER.info("-----> Applying growth, max age: " + getMaxAge());
-        int i = this.getAge(state) + this.getGrowthAmount(world);
-        int j = this.getMaxAge();
-        if (i > j) {
-            i = j;
-        }
-
-        SeedLightRiftways.LOGGER.info("-----> Applying growth, i=" + i + " wherease max age is: " + getMaxAge());
-        world.setBlockState(pos, this.withAge(i), Block.NOTIFY_LISTENERS);
-        if(i == getMaxAge() && !world.isClient){
-            spawnStructure((ServerWorld) world, pos);
-        }
-
-    }*/
-
     @Override
     public boolean isFertilizable(BlockView world, BlockPos pos, BlockState state, boolean isClient) {
         return false;
@@ -113,7 +90,6 @@ public class SeedLightPlantBlock extends CropBlock {
         if(WATER_LEVEL > getMaxWaterLevel()){
             WATER_LEVEL = getMaxWaterLevel();
         }
-        SeedLightRiftways.LOGGER.info("============== SETTING WATER LEVEL --> " + WATER_LEVEL + "==========");
     }
 
     public int getWaterLevel(){

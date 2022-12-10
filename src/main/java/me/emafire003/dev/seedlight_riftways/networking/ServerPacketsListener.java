@@ -11,6 +11,8 @@ import net.minecraft.util.math.Vec3d;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import static me.emafire003.dev.seedlight_riftways.SeedLightRiftways.LOGGER;
+
 //The minecraft one
 public class ServerPacketsListener {
 
@@ -32,24 +34,30 @@ public class ServerPacketsListener {
                     //player.sendMessage(Text.literal("DEUBUG: Origin server: " + origin_server));
                     player.sendMessage(Text.literal("DEUBUG: Origin server pos: " + origin_rift_pos));
                     BlockPos teleport_to = BlockPos.ORIGIN;
-
+                    boolean first = true;
                     for(Map.Entry<Long, Boolean> entry : SeedLightRiftways.RIFTWAYS_LOCATIONS.entrySet()){
                         boolean is_direct = entry.getValue();
                         long pos_long = entry.getKey();
                         if(!is_direct){
                             BlockPos pos = BlockPos.fromLong(pos_long);
+                            if(first){
+                                first = false;
+                                teleport_to = pos;
+                                continue;
+                            }
                             double distance_from_origin = pos.getSquaredDistance(origin_rift_pos.getX(), origin_rift_pos.getY(), origin_rift_pos.getZ());
                             double distance_from_teleportto = pos.getSquaredDistance(teleport_to.getX(), teleport_to.getY(), teleport_to.getZ());
                             if(distance_from_origin < distance_from_teleportto){
                                 teleport_to = pos;
                             }
                         }
+
                     }
                     player.teleport(teleport_to.getX(), teleport_to.getY(), teleport_to.getZ());
                 }catch (NoSuchElementException e){
-                    SeedLightRiftways.LOGGER.warn("No value in the packet, probably not a big problem");
+                    LOGGER.warn("No value in the packet, probably not a big problem");
                 }catch (Exception e){
-                    SeedLightRiftways.LOGGER.error("There was an error while getting the packet!");
+                    LOGGER.error("There was an error while getting the packet!");
                     e.printStackTrace();
                 }
             });

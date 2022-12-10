@@ -2,6 +2,7 @@ package me.emafire003.dev.seedlight_riftways.client;
 
 import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
 import me.emafire003.dev.seedlight_riftways.blocks.SLRBlocks;
+import me.emafire003.dev.seedlight_riftways.blocks.riftwayblock.RiftWayBlockEntity;
 import me.emafire003.dev.seedlight_riftways.blocks.riftwayblock.RiftwayBlockEntityRenderer;
 import me.emafire003.dev.seedlight_riftways.commands.SLRCommands;
 import me.emafire003.dev.seedlight_riftways.events.PlayerJoinServerCallback;
@@ -129,12 +130,11 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
      * This sends the "coming from riftway packet"
      * whenever the client has passed through the riftway*/
     private void registerComingFromRiftwaySenderEvent(){
-
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            LOGGER.info("------------Player joined-----------------");
-            client.player.sendMessage(Text.literal("------------Player joined-----------------"));
+            //TODO modify cooldown if config needs it
+            RiftWayBlockEntity.players_on_cooldown.put(client.player.getUuid(), RiftWayBlockEntity.RIFTWAY_COOLDOWN);
+
             if(coming_from_riftway){
-                LOGGER.info("------------Player joined-----------------");
                 client.player.sendMessage(Text.literal("------------Sending COMING FROM RIFTWAY PACKET-----------------"));
                 sendComingFromRiftwayPacket(PREVIOUS_SERVER_IP, false);
                 coming_from_riftway = false;
@@ -159,7 +159,9 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
     }
     
     public static void disconnect(MinecraftClient client){
+        //TODO debug
         LOGGER.info("Trying to disconnect from the server/world...");
+
         boolean bl = client.isInSingleplayer();
         client.world.disconnect();
         if (bl) {
@@ -169,7 +171,17 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
         }
         TitleScreen titleScreen = new TitleScreen();
         client.setScreen(new MultiplayerScreen(titleScreen));
+        //TODO debug
         LOGGER.info("Disconnected!");
+    }
+
+    public static void playEnterRiftwaySoundEffect(){
+        SoundManager soundManager = MinecraftClient.getInstance().getSoundManager();
+        soundManager.play(PositionedSoundInstance.master(SoundEvents.BLOCK_PORTAL_TRAVEL, 0.2f));
+        soundManager.play(PositionedSoundInstance.master(SoundEvents.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 0.25f));
+        soundManager.play(PositionedSoundInstance.master(SoundEvents.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 0.25f));
+        soundManager.play(PositionedSoundInstance.master(SoundEvents.BLOCK_PORTAL_TRAVEL, 1.7f));
+        soundManager.play(PositionedSoundInstance.master(SoundEvents.BLOCK_PORTAL_TRIGGER, 0.1f));
     }
 
 
@@ -193,13 +205,6 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
 
     public static void connectToServer(){
         try{
-            SoundManager soundManager = MinecraftClient.getInstance().getSoundManager();
-            soundManager.play(PositionedSoundInstance.master(SoundEvents.BLOCK_PORTAL_TRAVEL, 0.2f));
-            soundManager.play(PositionedSoundInstance.master(SoundEvents.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 0.25f));
-            soundManager.play(PositionedSoundInstance.master(SoundEvents.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 0.25f));
-            soundManager.play(PositionedSoundInstance.master(SoundEvents.BLOCK_PORTAL_TRAVEL, 1.7f));
-            soundManager.play(PositionedSoundInstance.master(SoundEvents.BLOCK_PORTAL_TRIGGER, 0.1f));
-
             ServerInfo serverInfo = new ServerInfo("riftway_to_"+SERVER_IP, SERVER_IP, false);
             LOGGER.debug("Trying to disconnect player form world...");
             disconnect(MinecraftClient.getInstance());

@@ -69,6 +69,7 @@ public class RiftwayClient implements Runnable{
                     if(received.equalsIgnoreCase("can_connect")){
                         LOGGER.info("Whoooh connecting to the other server. I think. Hopefully");
                         SeedLightRiftwaysClient.setConnectionAllowed();
+                        SeedLightRiftwaysClient.playEnterRiftwaySoundEffect();
                         tosend = "exit";
                         dos.writeUTF(tosend);
                         break;

@@ -78,6 +78,7 @@ public class SeedLightPlantBlock extends CropBlock {
     public void spawnStructure(ServerWorld world, BlockPos pos){
         StructurePlacerAPI placer = new StructurePlacerAPI(world, new Identifier(MOD_ID, "riftway_general"), pos, BlockMirror.NONE, BlockRotation.NONE, true, 1.0f, new BlockPos(-6, -1, -6));
         placer.loadStructure();
+        SeedLightRiftways.addRiftwayLocation(false, pos);
     }
 
     @Override

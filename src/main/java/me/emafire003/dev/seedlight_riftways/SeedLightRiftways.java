@@ -3,18 +3,17 @@ package me.emafire003.dev.seedlight_riftways;
 import me.emafire003.dev.seedlight_riftways.blocks.SLRBlocks;
 import me.emafire003.dev.seedlight_riftways.events.PlayerJoinServerCallback;
 import me.emafire003.dev.seedlight_riftways.items.SeedlightRiftwaysItems;
-import me.emafire003.dev.seedlight_riftways.networking.RiftwayListener;
-import me.emafire003.dev.seedlight_riftways.networking.ServerPacketsListener;
-import me.emafire003.dev.seedlight_riftways.networking.UpdateRiftwayActivenessS2C;
-import me.emafire003.dev.seedlight_riftways.networking.UpdateRiftwayIpS2C;
+import me.emafire003.dev.seedlight_riftways.networking.*;
 import me.emafire003.dev.seedlight_riftways.util.ConfigDataSaver;
 import me.emafire003.dev.seedlight_riftways.util.LootTableModifier;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +22,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SeedLightRiftways implements ModInitializer {
 
@@ -38,8 +38,9 @@ public class SeedLightRiftways implements ModInitializer {
     //this is the IP of the server which will be the arrival point if you go through a riftway on THIS server.
     public static String SAVED_SERVER_IP = "127.0.0.1";
     public static boolean IS_RIFTWAY_ACTIVE = false;
+    public static boolean REQUIRES_PASSWORD = false;
 
-    public static int LISTENER_PORT = 9000;
+    public static int LISTENER_PORT = 27999;
 
     @Override
     public void onInitialize() {
@@ -81,14 +82,18 @@ public class SeedLightRiftways implements ModInitializer {
         return IS_RIFTWAY_ACTIVE;
     }
 
+    public static boolean getRequiresPassword(){
+        return REQUIRES_PASSWORD;
+    }
+
     public static void updateConfig(){
         ConfigDataSaver.CONFIG_INSTANCE.getConfig().is_riftway_active = getIsRiftwayActive();
         ConfigDataSaver.CONFIG_INSTANCE.getConfig().riftway_locations = getRiftwaysLocations();
         ConfigDataSaver.CONFIG_INSTANCE.getConfig().server_riftway_items_password = getServerRiftwayItemsPassword();
         ConfigDataSaver.CONFIG_INSTANCE.getConfig().saved_server_ip = getSavedServerIp();
         ConfigDataSaver.CONFIG_INSTANCE.getConfig().listener_port = getListenerPort();
+        ConfigDataSaver.CONFIG_INSTANCE.getConfig().requires_password = getRequiresPassword();
         ConfigDataSaver.CONFIG_INSTANCE.save();
-
     }
 
     private  void getValuesFromFile(){
@@ -112,6 +117,7 @@ public class SeedLightRiftways implements ModInitializer {
             IS_RIFTWAY_ACTIVE = CONFIG.is_riftway_active;
             SAVED_SERVER_IP = CONFIG.saved_server_ip;
             LISTENER_PORT = CONFIG.listener_port;
+            REQUIRES_PASSWORD = CONFIG.requires_password;
 
 
             LOGGER.info("Done!");
@@ -137,6 +143,7 @@ public class SeedLightRiftways implements ModInitializer {
         try{
             ServerPlayNetworking.send(player, UpdateRiftwayActivenessS2C.ID, new UpdateRiftwayActivenessS2C(IS_RIFTWAY_ACTIVE));
             ServerPlayNetworking.send(player, UpdateRiftwayIpS2C.ID, new UpdateRiftwayIpS2C(SAVED_SERVER_IP));
+            ServerPlayNetworking.send(player, UpdateRiftwayPasswordS2C.ID, new UpdateRiftwayPasswordS2C(SERVER_RIFTWAY_ITEMS_PASSWORD.toString()));
         }catch(Exception e){
             LOGGER.error("FAILED to send data packets to the client!");
             e.printStackTrace();
@@ -151,6 +158,34 @@ public class SeedLightRiftways implements ModInitializer {
             }
             sendUpdateRiftwayPacket(player);
         }
+    }
+
+    public static BlockPos getClosestRiftway(BlockPos origin_rift_pos){
+        LOGGER.info("DEUBUG: Origin server pos: " + origin_rift_pos);
+        BlockPos teleport_to = BlockPos.ORIGIN;
+        boolean first = true;
+        for(Map.Entry<Long, Boolean> entry : SeedLightRiftways.RIFTWAYS_LOCATIONS.entrySet()){
+            boolean is_direct = entry.getValue();
+            long pos_long = entry.getKey();
+            if(!is_direct){
+                BlockPos pos = BlockPos.fromLong(pos_long);
+                if(first){
+                    first = false;
+                    teleport_to = pos;
+                    continue;
+                }
+                double distance_from_origin = pos.getSquaredDistance(origin_rift_pos.getX(), origin_rift_pos.getY(), origin_rift_pos.getZ());
+                double distance_from_teleportto = pos.getSquaredDistance(teleport_to.getX(), teleport_to.getY(), teleport_to.getZ());
+                LOGGER.info("List: " +SeedLightRiftways.RIFTWAYS_LOCATIONS.entrySet().toString());
+                LOGGER.info("Current pos: " + pos);
+                if(distance_from_origin < distance_from_teleportto){
+                    teleport_to = pos;
+                    LOGGER.info("Switching to new pos: " + teleport_to);
+                }
+            }
+        }
+        return teleport_to;
+
     }
 
     //TODO will need to make a listner for the coming from riftway packet

@@ -13,15 +13,13 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.slf4j.Logger;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class RiftWayBlockEntity extends EndPortalBlockEntity {
     private static final Logger LOGGER = LogUtils.getLogger();
@@ -41,14 +39,13 @@ public class RiftWayBlockEntity extends EndPortalBlockEntity {
         //TODO to teleport the player back, I should make it just before shutting down the server
         if (!list.isEmpty() && list.contains(MinecraftClient.getInstance().player)) {
             if(SeedLightRiftwaysClient.IS_RIFTWAY_ACTIVE){
-                LOGGER.info("Is player in cooldown: " + players_on_cooldown.containsKey(MinecraftClient.getInstance().player.getUuid()));
-                LOGGER.info("Cooldown list: " + players_on_cooldown);
                 if(!SeedLightRiftwaysClient.connection_initialised && !players_on_cooldown.containsKey(MinecraftClient.getInstance().player.getUuid())){
                     SeedLightRiftwaysClient.setDepartureBlockpos(pos);
                     //SeedLightRiftwaysClient.connectToServer();
                     //TODO config the delay between teleports? Currently it's 10 seconds
                     players_on_cooldown.put(MinecraftClient.getInstance().player.getUuid(), RIFTWAY_COOLDOWN);
                     SeedLightRiftwaysClient.startConnectionToServer();
+                    playEnterRiftwaySoundEffect(world, pos);
                 }
 
 
@@ -101,27 +98,11 @@ public class RiftWayBlockEntity extends EndPortalBlockEntity {
                 }
             }else{
                 for(PlayerEntity player : list){
-                    LOGGER.info("Is player in cooldown: " + players_on_cooldown.containsKey(player.getUuid()));
-                    LOGGER.info("Cooldown list: " + players_on_cooldown);
                     if(player != null && !players_on_cooldown.containsKey(player.getUuid())){
                         //TODO config the delay between teleports? Currently it's 10 seconds
                         players_on_cooldown.put(player.getUuid(), RIFTWAY_COOLDOWN);
-                        //player.setPosition(Vec3d.ofCenter(pos.add(-2, 0, 0)));
-                        //execute at @a run particle minecraft:end_rod ~ ~ ~ 0.03 0.85 0.03 0.15 200
-                        ((ServerWorld) world).spawnParticles(ParticleTypes.END_ROD, player.getX(), player.getY(), player.getZ(), 200, 0.03, 0.85, 0.03, 0.15);
-                        //execute at @a run particle minecraft:dragon_breath ~ ~0.5 ~ 0.2 0.7 0.2 0.15 200
-                        ((ServerWorld) world).spawnParticles(ParticleTypes.DRAGON_BREATH, player.getX(), player.getY()+0.5, player.getZ(), 200, 0.2, 0.7, 0.2, 0.15);
-                        //execute at @a run particle minecraft:enchant ~ ~0.5 ~ 0.2 0.6 0.2 0.15 100
-                        ((ServerWorld) world).spawnParticles(ParticleTypes.ENCHANT, player.getX(), player.getY()+0.5, player.getZ(), 100, 0.2, 0.6, 0.2, 0.15);
-                        //execute at @a run particle minecraft:flash ~ ~0.5 ~ 0.2 0.7 0.2 0.15 1
-                        ((ServerWorld) world).spawnParticles(ParticleTypes.FLASH, player.getX(), player.getY()+0.5, player.getZ(), 1, 0.2, 0.7, 0.2, 0.15);
-                        player.playSound(SoundEvents.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 0.5f, 0.25f);
-                        player.playSound(SoundEvents.BLOCK_PORTAL_TRAVEL, 1f, 0.2f);
-                        player.playSound(SoundEvents.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 1f, 0.25f);
-                        player.playSound(SoundEvents.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 1f, 0.25f);
-                        player.playSound(SoundEvents.BLOCK_PORTAL_TRAVEL, 1f, 1.7f);
-                        player.playSound(SoundEvents.BLOCK_PORTAL_TRIGGER, 1f, 0.1f);
-
+                        spawnEnterRiftwayParticles(world, Vec3d.ofCenter(pos).add(0,1,0));
+                        playEnterRiftwaySoundEffect(world, pos);
                     }
                 }
             }
@@ -158,7 +139,7 @@ public class RiftWayBlockEntity extends EndPortalBlockEntity {
 
 
     public boolean shouldDrawSide(Direction direction) {
-        return Block.shouldDrawSide(this.getCachedState(), this.world, this.getPos(), direction, this.getPos().offset(direction));
+        return Block.shouldDrawSide(this.getCachedState(), Objects.requireNonNull(this.world), this.getPos(), direction, this.getPos().offset(direction));
     }
 
     public int getDrawnSidesCount() {
@@ -166,12 +147,53 @@ public class RiftWayBlockEntity extends EndPortalBlockEntity {
         Direction[] var2 = Direction.values();
         int var3 = var2.length;
 
-        for(int var4 = 0; var4 < var3; ++var4) {
-            Direction direction = var2[var4];
+        for (Direction direction : var2) {
             i += this.shouldDrawSide(direction) ? 1 : 0;
         }
 
         return i;
+    }
+
+    public static void playEnterRiftwaySoundEffect(World world, BlockPos pos){
+        LOGGER.info("Trying to play enter riftway sound on world...");
+        world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.BLOCKS, 1f, 0.2f, false);
+        world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ALLAY_AMBIENT_WITH_ITEM, SoundCategory.BLOCKS, 1f, 0.25f, false);
+        world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ALLAY_AMBIENT_WITH_ITEM, SoundCategory.BLOCKS, 1f, 0.25f, false);
+        world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.BLOCKS, 1f, 1.7f, false);
+        world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PORTAL_TRIGGER, SoundCategory.BLOCKS, 1f, 0.1f, false);
+        LOGGER.info("Played");
+    }
+
+    public static void spawnEnterRiftwayParticles(World world, Vec3d pos){
+        ((ServerWorld) world).spawnParticles(ParticleTypes.END_ROD, pos.getX(), pos.getY(), pos.getZ(), 200, 0.03, 0.85, 0.03, 0.15);
+        ((ServerWorld) world).spawnParticles(ParticleTypes.DRAGON_BREATH, pos.getX(), pos.getY()+0.5, pos.getZ(), 200, 0.2, 0.7, 0.2, 0.15);
+        ((ServerWorld) world).spawnParticles(ParticleTypes.ENCHANT, pos.getX(), pos.getY()+0.5, pos.getZ(), 100, 0.2, 0.6, 0.2, 0.15);
+        ((ServerWorld) world).spawnParticles(ParticleTypes.FLASH, pos.getX(), pos.getY()+0.5, pos.getZ(), 1, 0.2, 0.7, 0.2, 0.15);
+    }
+
+    public static void playExitRiftwaySoundEffect(World world, BlockPos pos){
+        LOGGER.info("Trying to play exit sound on world...");
+        //playsound minecraft:block.portal.travel block @p ~ ~ ~ 1 0.5
+        //playsound minecraft:entity.allay.ambient_with_item player @a ~ ~ ~ 0.8 0.4
+        //playsound minecraft:block.portal.trigger ambient @p ~ ~ ~ 1 1.78
+        world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.BLOCKS, 1f, 0.5f, false);
+        world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ALLAY_AMBIENT_WITH_ITEM, SoundCategory.BLOCKS, 0.8f, 0.4f, false);
+        world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PORTAL_TRIGGER, SoundCategory.BLOCKS, 1f, 1.78f, false);
+        LOGGER.info("Played");
+    }
+
+    public static void spawnExitRiftwayParticles(World world, Vec3d pos){
+        //execute at @a run particle minecraft:end_rod ~ ~ ~ 0.01 1 0.01 0.1 200
+        //execute at @a run particle minecraft:cloud ~ ~1 ~ 0.5 0.6 0.5 0.06 100
+        //execute at @a run particle minecraft:enchant ~ ~0.5 ~ 0.2 0.6 0.2 0.15 100
+        //execute at @a run particle minecraft:flash ~ ~0.5 ~ 0.2 0.7 0.2 0.15 1
+        //execute at @a run particle minecraft:glow ~ ~1 ~ 0.5 0.7 0.5 0.7 100
+        LOGGER.info("Spawning particles! exit");
+        ((ServerWorld) world).spawnParticles(ParticleTypes.END_ROD, pos.getX(), pos.getY(), pos.getZ(), 200, 0.01, 1, 0.01, 0.1);
+        ((ServerWorld) world).spawnParticles(ParticleTypes.CLOUD, pos.getX(), pos.getY()+1, pos.getZ(), 100, 0.5, 0.6, 0.5, 0.06);
+        ((ServerWorld) world).spawnParticles(ParticleTypes.ENCHANT, pos.getX(), pos.getY()+0.5, pos.getZ(), 100, 0.2, 0.6, 0.2, 0.15);
+        ((ServerWorld) world).spawnParticles(ParticleTypes.FLASH, pos.getX(), pos.getY()+0.5, pos.getZ(), 1, 0.2, 0.7, 0.2, 0.15);
+        ((ServerWorld) world).spawnParticles(ParticleTypes.GLOW, pos.getX(), pos.getY()+0.5, pos.getZ(), 100, 0.5, 0.7, 0.5, 0.7);
     }
     
 }

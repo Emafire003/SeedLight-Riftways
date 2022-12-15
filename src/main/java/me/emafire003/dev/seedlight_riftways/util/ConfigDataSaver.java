@@ -29,6 +29,9 @@ public class ConfigDataSaver {
     @ConfigEntry
     public int listener_port = SeedLightRiftways.getListenerPort();
 
+    @ConfigEntry
+    public boolean requires_password = SeedLightRiftways.getRequiresPassword();
+
     /*public Screen createGui(Screen parent) {
         // time to use YOCL!
         return new TitleScreen();

@@ -1,4 +1,5 @@
 accessWidener v1 named
+#tests
 accessible class net/minecraft/client/render/RenderPhase$LineWidth
 accessible class net/minecraft/client/render/RenderLayer$MultiPhase
 accessible class net/minecraft/client/render/RenderLayer$MultiPhaseParameters

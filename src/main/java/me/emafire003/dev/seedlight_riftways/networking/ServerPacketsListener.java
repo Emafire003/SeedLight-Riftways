@@ -1,6 +1,7 @@
 package me.emafire003.dev.seedlight_riftways.networking;
 
 import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
+import me.emafire003.dev.seedlight_riftways.blocks.riftwayblock.RiftWayBlockEntity;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.block.NetherPortalBlock;
@@ -8,6 +9,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -32,29 +35,13 @@ public class ServerPacketsListener {
                 try{
                     //player.sendMessage(Text.literal("DEUBUG: Is Coming from direct portal: " + coming_from_direct));
                     //player.sendMessage(Text.literal("DEUBUG: Origin server: " + origin_server));
-                    player.sendMessage(Text.literal("DEUBUG: Origin server pos: " + origin_rift_pos));
-                    BlockPos teleport_to = BlockPos.ORIGIN;
-                    boolean first = true;
-                    for(Map.Entry<Long, Boolean> entry : SeedLightRiftways.RIFTWAYS_LOCATIONS.entrySet()){
-                        boolean is_direct = entry.getValue();
-                        long pos_long = entry.getKey();
-                        if(!is_direct){
-                            BlockPos pos = BlockPos.fromLong(pos_long);
-                            if(first){
-                                first = false;
-                                teleport_to = pos;
-                                continue;
-                            }
-                            double distance_from_origin = pos.getSquaredDistance(origin_rift_pos.getX(), origin_rift_pos.getY(), origin_rift_pos.getZ());
-                            double distance_from_teleportto = pos.getSquaredDistance(teleport_to.getX(), teleport_to.getY(), teleport_to.getZ());
-                            if(distance_from_origin < distance_from_teleportto){
-                                teleport_to = pos;
-                            }
-                        }
+                    BlockPos teleport_to = SeedLightRiftways.getClosestRiftway(origin_rift_pos);
+                    LOGGER.info("Position chosen: " + teleport_to);
+                    RiftWayBlockEntity.playExitRiftwaySoundEffect(player.getWorld(), teleport_to);
+                    RiftWayBlockEntity.spawnExitRiftwayParticles(player.getWorld(), Vec3d.ofCenter(teleport_to.add(0,1,0)));
+                    player.teleport(teleport_to.getX()+0.5, teleport_to.getY(), teleport_to.getZ()+0.5);
 
-                    }
-                    player.teleport(teleport_to.getX(), teleport_to.getY(), teleport_to.getZ());
-                }catch (NoSuchElementException e){
+                    }catch (NoSuchElementException e){
                     LOGGER.warn("No value in the packet, probably not a big problem");
                 }catch (Exception e){
                     LOGGER.error("There was an error while getting the packet!");

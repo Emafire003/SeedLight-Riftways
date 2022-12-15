@@ -40,6 +40,7 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
     public static String PREVIOUS_SERVER_IP = SERVER_IP;
     public static boolean IS_RIFTWAY_ACTIVE = false;
     public static BlockPos DEPARTURE_BLOCKPOS;
+    public static String SERVER_ITEMS_PASSWORD = "";
     public static boolean connection_initialised = false;
     private static boolean coming_from_riftway = false;
     //this variable gets modified by the RiftwayClient thread
@@ -59,6 +60,7 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(SLRBlocks.SEEDLIGHT_PLANT, RenderLayer.getCutout());
         registerUpdateRiftwayActivenessPacket();
         registerUpdateRiftwayIpPacket();
+        registerUpdateRiftwayPasswordPacket();
         PlayerJoinServerCallback.registerJoinEvent();
 
         registerComingFromRiftwaySenderEvent();
@@ -108,6 +110,23 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
         }));
     }
 
+    private void registerUpdateRiftwayPasswordPacket(){
+        ClientPlayNetworking.registerGlobalReceiver(UpdateRiftwayPasswordS2C.ID, ((client, handler, buf, responseSender) -> {
+            var result = UpdateRiftwayPasswordS2C.read(buf);
+
+            client.execute(() -> {
+                try{
+                    SERVER_ITEMS_PASSWORD = result;
+                }catch (NoSuchElementException e){
+                    LOGGER.warn("No value in the packet, probably not a big problem");
+                }catch (Exception e){
+                    LOGGER.error("There was an error while getting the packet!");
+                    e.printStackTrace();
+                }
+            });
+        }));
+    }
+
     private void registerUpdateRiftwayIpPacket(){
         ClientPlayNetworking.registerGlobalReceiver(UpdateRiftwayIpS2C.ID, ((client, handler, buf, responseSender) -> {
             var result = UpdateRiftwayIpS2C.read(buf);
@@ -132,12 +151,12 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
     private void registerComingFromRiftwaySenderEvent(){
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             //TODO modify cooldown if config needs it
-            RiftWayBlockEntity.players_on_cooldown.put(client.player.getUuid(), RiftWayBlockEntity.RIFTWAY_COOLDOWN);
+            RiftWayBlockEntity.players_on_cooldown.put(client.player.getUuid(), RiftWayBlockEntity.RIFTWAY_COOLDOWN*2);
 
             if(coming_from_riftway){
-                client.player.sendMessage(Text.literal("------------Sending COMING FROM RIFTWAY PACKET-----------------"));
                 sendComingFromRiftwayPacket(PREVIOUS_SERVER_IP, false);
                 coming_from_riftway = false;
+                playExitRiftwaySoundEffect();
             }
 
         });
@@ -176,12 +195,23 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
     }
 
     public static void playEnterRiftwaySoundEffect(){
+        LOGGER.info("Trying to play sound...");
         SoundManager soundManager = MinecraftClient.getInstance().getSoundManager();
         soundManager.play(PositionedSoundInstance.master(SoundEvents.BLOCK_PORTAL_TRAVEL, 0.2f));
         soundManager.play(PositionedSoundInstance.master(SoundEvents.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 0.25f));
         soundManager.play(PositionedSoundInstance.master(SoundEvents.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 0.25f));
         soundManager.play(PositionedSoundInstance.master(SoundEvents.BLOCK_PORTAL_TRAVEL, 1.7f));
         soundManager.play(PositionedSoundInstance.master(SoundEvents.BLOCK_PORTAL_TRIGGER, 0.1f));
+        LOGGER.info("Played");
+    }
+
+    public static void playExitRiftwaySoundEffect(){
+        LOGGER.info("Trying to play exit sound...");
+        SoundManager soundManager = MinecraftClient.getInstance().getSoundManager();
+        soundManager.play(PositionedSoundInstance.master(SoundEvents.BLOCK_PORTAL_TRAVEL, 0.5f, 0.8f));
+        soundManager.play(PositionedSoundInstance.master(SoundEvents.ENTITY_ALLAY_AMBIENT_WITH_ITEM, 0.4f));
+        soundManager.play(PositionedSoundInstance.master(SoundEvents.BLOCK_PORTAL_TRIGGER, 1.78f));
+        LOGGER.info("Played");
     }
 
 
@@ -211,6 +241,7 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
             LOGGER.debug("Trying to connect to server...");
             ConnectScreen.connect(MinecraftClient.getInstance().currentScreen, MinecraftClient.getInstance(), ServerAddress.parse(serverInfo.address), serverInfo);
             coming_from_riftway = true;
+            playEnterRiftwaySoundEffect();
             connection_initialised = false;
         }catch (Exception e){
             e.printStackTrace();

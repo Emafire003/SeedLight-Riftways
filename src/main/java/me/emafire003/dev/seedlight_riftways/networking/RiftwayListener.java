@@ -33,7 +33,6 @@ public class RiftwayListener implements Runnable{
     @Override
     public void run() {
         try {
-            LOGGER.info("Starting the listener...");
             runServer();
         } catch (IOException e) {
             e.printStackTrace();
@@ -64,13 +63,14 @@ public class RiftwayListener implements Runnable{
                 // socket object to receive incoming client requests
                 s = ss.accept();
 
-                LOGGER.info("A new client just connected: " + s);
+                //TODO move to debug
+                LOGGER.info("A new riftway-client just connected to the listener: " + s);
 
                 // obtaining input and out streams
                 DataInputStream dis = new DataInputStream(s.getInputStream());
                 DataOutputStream dos = new DataOutputStream(s.getOutputStream());
 
-                LOGGER.info("Assigning new thread for this client");
+                LOGGER.debug("Assigning new thread for this client");
 
                 // create a new thread object
                 Thread t = new ClientHandler(s, dis, dos);
@@ -120,13 +120,14 @@ class ClientHandler extends Thread
                 // receive the answer from client
                 received = dis.readUTF();
 
-                LOGGER.info("Message received: " + received);
+                //TODO set this to logger.debug
+                LOGGER.debug("Message received: " + received);
 
                 if(received.equals("exit"))
                 {
                     //TODO set this to logger.debug
                     LOGGER.debug("Client " + this.s + " sends exit...");
-                    LOGGER.info("Closing this connection.");
+                    LOGGER.info("Info sent, Closing this connection.");
                     this.s.close();
                     LOGGER.debug("Connection closed");
                     break;
@@ -135,15 +136,18 @@ class ClientHandler extends Thread
                 if(!SeedLightRiftways.IS_RIFTWAY_ACTIVE){
                     toreturn = "no_riftways";
                     dos.writeUTF(toreturn);
+                    //TODO set this to logger.debug
                     LOGGER.info("Sending 'no_riftways' to client");
-                }else if(received.equalsIgnoreCase("diamond"))//TODO I would need a check for the list of items as password
+                }else if(!SeedLightRiftways.REQUIRES_PASSWORD || received.equalsIgnoreCase(SeedLightRiftways.SERVER_RIFTWAY_ITEMS_PASSWORD.toString()))
                 {
                     toreturn = "can_connect";
                     dos.writeUTF(toreturn);
+                    //TODO set this to logger.debug
                     LOGGER.info("Sending 'can_connect' to client");
                 }else {
                     toreturn = "wrong_password";
                     dos.writeUTF(toreturn);
+                    //TODO set this to logger.debug
                     LOGGER.info("Sending 'wrong_password' to client");
                 }
             }//end of the while

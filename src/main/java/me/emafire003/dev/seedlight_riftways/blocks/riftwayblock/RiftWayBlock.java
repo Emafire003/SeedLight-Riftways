@@ -10,6 +10,8 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.client.gui.screen.world.SelectWorldScreen;
+import net.minecraft.client.gui.screen.world.WorldListWidget;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BundleItem;
@@ -26,6 +28,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.level.storage.LevelSummary;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -111,7 +114,6 @@ public class RiftWayBlock extends BlockWithEntity {
                 player.getWorld().playSound((double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), SoundEvents.ENTITY_ALLAY_AMBIENT_WITH_ITEM, SoundCategory.AMBIENT, 0.3f, 0.3f, true);
                 player.getWorld().playSound((double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), SoundEvents.BLOCK_AMETHYST_CLUSTER_FALL, SoundCategory.AMBIENT, 1f, 0.5f, true);
                 player.getWorld().playSound((double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), SoundEvents.BLOCK_AMETHYST_BLOCK_HIT, SoundCategory.AMBIENT, 1f, 1.7f, true);
-                SeedLightRiftways.addRiftwayLocation(false, pos);
             }//CLIENT ONLY BITS
             else{
                 SeedLightRiftwaysClient.SERVER_IP = itemStack.getNbt().getString(NBT_SERVERIP_KEY);
@@ -149,15 +151,27 @@ public class RiftWayBlock extends BlockWithEntity {
             }
 
             return ActionResult.PASS;
-        }else if(itemStack.getItem() instanceof BundleItem && player.hasPermissionLevel(2)){
+        }else if(itemStack.getItem() instanceof BundleItem && player.hasPermissionLevel(2) && !world.isClient){
             //BundleItemInvoker bundle = (BundleItemInvoker) itemStack.getItem();
-            Stream<ItemStack> items = BundleItemInvoker.getBundledStacksInv(itemStack);
+            List<ItemStack> items = BundleItemInvoker.getBundledStacksInv(itemStack).toList();
             SeedLightRiftways.SERVER_RIFTWAY_ITEMS_PASSWORD.clear();
-            items.forEach(itemStack1 -> {
-                SeedLightRiftways.SERVER_RIFTWAY_ITEMS_PASSWORD.add(itemStack1.getItem().getName().getString().toString());
-            });
-            player.sendMessage(Text.literal(SeedLightRiftways.PREFIX+" §bThe item combination to access this world has been changed!"));
-            player.sendMessage(Text.literal(SeedLightRiftways.PREFIX+" §bIt now is: §a" + SeedLightRiftways.SERVER_RIFTWAY_ITEMS_PASSWORD.toString()));
+            if(items.isEmpty()){
+                SeedLightRiftways.REQUIRES_PASSWORD = false;
+                player.sendMessage(Text.literal(SeedLightRiftways.PREFIX+" §cRemoved the item combination to access this world!"));
+            }else{
+                try{
+                    for(ItemStack item : items){
+                        SeedLightRiftways.SERVER_RIFTWAY_ITEMS_PASSWORD.add(item.getItem().getName().getString().toString());
+                    }
+                    SeedLightRiftways.REQUIRES_PASSWORD = true;
+                    player.sendMessage(Text.literal(SeedLightRiftways.PREFIX+" §bThe item combination to access this world has been changed!"));
+                    player.sendMessage(Text.literal(SeedLightRiftways.PREFIX+" §bIt now is: §a" + SeedLightRiftways.SERVER_RIFTWAY_ITEMS_PASSWORD.toString()));
+                }catch (Exception e){
+                    player.sendMessage(Text.literal(SeedLightRiftways.PREFIX+" §4An error occurred! Check the logs!"));
+                    e.printStackTrace();
+                }
+
+            }
             SeedLightRiftways.updateConfig();
         }
         return super.onUse(state, world, pos, player, hand, hit);

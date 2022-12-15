@@ -59,7 +59,7 @@ public class RiftwayClient implements Runnable{
                 {
                     LOGGER.info("Sending stuff");
                     //TODO switch to the list of items
-                    String tosend = "diamond";
+                    String tosend = SeedLightRiftwaysClient.SERVER_ITEMS_PASSWORD;
                     dos.writeUTF(tosend);
 
                     // printing date or time as requested by client
@@ -68,6 +68,7 @@ public class RiftwayClient implements Runnable{
 
                     if(received.equalsIgnoreCase("can_connect")){
                         LOGGER.info("Whoooh connecting to the other server. I think. Hopefully");
+                        SeedLightRiftwaysClient.playEnterRiftwaySoundEffect();
                         SeedLightRiftwaysClient.setConnectionAllowed();
                         SeedLightRiftwaysClient.playEnterRiftwaySoundEffect();
                         tosend = "exit";

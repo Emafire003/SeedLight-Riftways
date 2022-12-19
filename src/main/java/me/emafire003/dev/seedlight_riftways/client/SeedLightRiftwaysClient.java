@@ -19,6 +19,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.*;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
+import net.minecraft.client.gui.screen.world.SelectWorldScreen;
+import net.minecraft.client.gui.screen.world.WorldListWidget;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.render.RenderLayer;
@@ -27,8 +29,13 @@ import net.minecraft.client.sound.SoundManager;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.storage.LevelStorage;
+import net.minecraft.world.level.storage.LevelSummary;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.concurrent.ExecutionException;
 
 import static me.emafire003.dev.seedlight_riftways.SeedLightRiftways.LOGGER;
 import static me.emafire003.dev.seedlight_riftways.SeedLightRiftways.MOD_ID;
@@ -179,7 +186,7 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
     
     public static void disconnect(MinecraftClient client){
         //TODO debug
-        LOGGER.info("Trying to disconnect from the server/world...");
+        LOGGER.debug("Trying to disconnect from the server/world...");
 
         boolean bl = client.isInSingleplayer();
         client.world.disconnect();
@@ -191,7 +198,7 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
         TitleScreen titleScreen = new TitleScreen();
         client.setScreen(new MultiplayerScreen(titleScreen));
         //TODO debug
-        LOGGER.info("Disconnected!");
+        LOGGER.debug("Disconnected!");
     }
 
     public static void playEnterRiftwaySoundEffect(){
@@ -233,6 +240,7 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
         connection_initialised = false;
     }
 
+
     public static void connectToServer(){
         try{
             ServerInfo serverInfo = new ServerInfo("riftway_to_"+SERVER_IP, SERVER_IP, false);
@@ -248,6 +256,68 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
             connection_initialised = false;
         }
 
+    }
+
+    public static void connectToLocalWorld(String level_name) throws ExecutionException, InterruptedException {
+        LOGGER.debug("Trying to disconnect player from server...");
+        disconnect(MinecraftClient.getInstance());
+        LOGGER.debug("Trying to connect to world...");
+        MinecraftClient client = MinecraftClient.getInstance();
+        coming_from_riftway = true;
+        playEnterRiftwaySoundEffect();
+        connection_initialised = false;
+        List<LevelSummary> levels_summaries = client.getLevelStorage().loadSummaries(client.getLevelStorage().getLevelList()).get();
+
+        LevelStorage.LevelSave save = new LevelStorage.LevelSave(client.getLevelStorage().getSavesDirectory().resolve(level_name));
+
+        for(LevelSummary levelSummary : levels_summaries){
+            if(!levelSummary.isLocked() && levelSummary.getName().equals(level_name)){
+                WorldListWidget levelList = null;
+                levelList = new WorldListWidget(new SelectWorldScreen(new TitleScreen()), MinecraftClient.getInstance(), 100, 100, 48, 100 - 64, 36, "hello", levelList);
+                levelList.new WorldEntry(levelList, levelSummary).play();
+                break;
+            }
+        }
+    }
+
+    /**This returns the LevelSummary of the last played world. If there are no worlds, returns null*/
+    @Nullable
+    public static LevelSummary getLastPlayedWorld() throws ExecutionException, InterruptedException {
+        MinecraftClient client = MinecraftClient.getInstance();
+        List<LevelSummary> levels_summaries = client.getLevelStorage().loadSummaries(client.getLevelStorage().getLevelList()).get();
+
+        LevelSummary levelSum = null;
+        for(LevelSummary levelSummary : levels_summaries){
+            if(levelSum == null){
+                levelSum = levelSummary;
+            }
+            if(levelSummary.getLastPlayed() < levelSum.getLastPlayed()){
+                levelSum = levelSummary;
+            }
+        }
+        return levelSum;
+
+    }
+
+    public static void connectToLocalWorldLastPlayed() throws ExecutionException, InterruptedException {
+        LOGGER.debug("Trying to disconnect player form server...");
+        disconnect(MinecraftClient.getInstance());
+        LOGGER.debug("Trying to connect to world...");
+        MinecraftClient client = MinecraftClient.getInstance();
+        coming_from_riftway = true;
+        playEnterRiftwaySoundEffect();
+        connection_initialised = false;
+        List<LevelSummary> levels_summaries = client.getLevelStorage().loadSummaries(client.getLevelStorage().getLevelList()).get();
+
+        LevelSummary levelSum = getLastPlayedWorld();
+
+        if(levelSum != null && !levelSum.isLocked()){
+            WorldListWidget levelList = null;
+            SelectWorldScreen selectWorldScreen = new SelectWorldScreen(new TitleScreen());
+            client.setScreen(selectWorldScreen);
+            levelList = new WorldListWidget(selectWorldScreen, MinecraftClient.getInstance(), selectWorldScreen.width, selectWorldScreen.height, 48, selectWorldScreen.height - 64, 36, "Connecting to the local world...", levelList);
+            levelList.new WorldEntry(levelList, levelSum).play();
+        }
     }
 
     public static void connectToServer(String ip_address){

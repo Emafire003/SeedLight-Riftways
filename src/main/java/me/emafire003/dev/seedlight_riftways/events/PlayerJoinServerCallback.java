@@ -17,9 +17,9 @@ public class PlayerJoinServerCallback {
         PlayerJoinEvent.EVENT.register((player, server) -> {
             if(player.getWorld().isClient){
                 return ActionResult.PASS;
-            }else{
-                SeedLightRiftways.sendUpdateRiftwayPacket(player);
             }
+            SeedLightRiftways.sendUpdateRiftwayPacket(player);
+
             //TODO modify cooldown if config needs it (somehow it's not 20 ticks = 1 second
             RiftWayBlockEntity.players_on_cooldown.put(player.getUuid(), RiftWayBlockEntity.RIFTWAY_COOLDOWN);
             return ActionResult.PASS;

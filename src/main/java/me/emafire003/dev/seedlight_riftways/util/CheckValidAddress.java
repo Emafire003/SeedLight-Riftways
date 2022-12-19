@@ -21,6 +21,8 @@ public class CheckValidAddress extends Thread {
     @Override
     public void run() {
 
+        if(address.startsWith("local")) return; // If it starts with local it's not a server after all. Well, technically it's localhost but...
+
         InetAddress[] iaddress
                 = new InetAddress[0];
         try {

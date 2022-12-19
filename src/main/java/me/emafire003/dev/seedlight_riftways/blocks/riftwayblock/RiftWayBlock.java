@@ -6,18 +6,19 @@ import me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient;
 import me.emafire003.dev.seedlight_riftways.items.InterRiftwaysLeafItem;
 import me.emafire003.dev.seedlight_riftways.mixin.BundleItemInvoker;
 import me.emafire003.dev.seedlight_riftways.util.CheckValidAddress;
+import me.emafire003.dev.seedlight_riftways.util.INamedSeverWorld;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.gui.screen.world.SelectWorldScreen;
-import net.minecraft.client.gui.screen.world.WorldListWidget;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BundleItem;
 import net.minecraft.item.FireChargeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -28,13 +29,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.level.storage.LevelSummary;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 import static me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient.SERVER_IP;
 import static me.emafire003.dev.seedlight_riftways.items.InterRiftwaysLeafItem.NBT_SERVERIP_KEY;
@@ -94,6 +92,39 @@ public class RiftWayBlock extends BlockWithEntity {
         return checkType(type, SLRBlocks.RIFTWAY_BLOCKENTITY, world.isClient ? RiftWayBlockEntity::clientTick : RiftWayBlockEntity::serverTick);
     }
 
+    @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        Thread thread = new Thread(() -> addNewRiftLoc(6, pos, world)); // It needs to check 200+ blocks after all
+        thread.setName("riftloc_check");
+        thread.start();
+        super.onPlaced(world, pos, state, placer, itemStack);
+    }
+
+    /**Checks of other blocks of the same type as this one close by
+     * If there are returns false, meaning it can be considered as a new Riftway in on itself
+     * And it also adds its position to the list
+     *
+     * */
+    public boolean addNewRiftLoc(int rad, BlockPos origin, World world){
+        for(int y = -rad; y <= rad; y++)
+        {
+            for(int x = -rad; x <= rad; x++)
+            {
+                for(int z = -rad; z <= rad; z++)
+                {
+                    BlockPos pos = origin.add(x, y, z);
+                    if(world.getBlockState(pos).getBlock() instanceof RiftWayBlock){
+                        return false;
+                    }
+
+                }
+            }
+        }
+        //If no match has been found, return true.
+        SeedLightRiftways.addRiftwayLocation(false, origin, world);
+        return true;
+    }
+
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack itemStack = player.getStackInHand(hand);
 
@@ -114,6 +145,12 @@ public class RiftWayBlock extends BlockWithEntity {
                 player.getWorld().playSound((double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), SoundEvents.ENTITY_ALLAY_AMBIENT_WITH_ITEM, SoundCategory.AMBIENT, 0.3f, 0.3f, true);
                 player.getWorld().playSound((double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), SoundEvents.BLOCK_AMETHYST_CLUSTER_FALL, SoundCategory.AMBIENT, 1f, 0.5f, true);
                 player.getWorld().playSound((double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), SoundEvents.BLOCK_AMETHYST_BLOCK_HIT, SoundCategory.AMBIENT, 1f, 1.7f, true);
+
+                ServerWorld sworld = ((ServerWorld) player.getWorld());
+                //If the server is NOT dedicated, it means it's integrated which means it's in singleplayer
+                if(!sworld.getServer().isDedicated()){
+                    SeedLightRiftways.setIsRiftwayActiveInWorld(true, ((INamedSeverWorld)sworld).getLevelName());
+                }
             }//CLIENT ONLY BITS
             else{
                 SeedLightRiftwaysClient.SERVER_IP = itemStack.getNbt().getString(NBT_SERVERIP_KEY);
@@ -141,6 +178,11 @@ public class RiftWayBlock extends BlockWithEntity {
             //SERVER BITS
             if(!player.getWorld().isClient){
                 SeedLightRiftways.IS_RIFTWAY_ACTIVE = false;
+                ServerWorld sworld = ((ServerWorld) player.getWorld());
+                //If the server is NOT dedicated, it means it's integrated which means it's in singleplayer
+                if(!sworld.getServer().isDedicated()){
+                    SeedLightRiftways.setIsRiftwayActiveInWorld(false, ((INamedSeverWorld)sworld).getLevelName());
+                }
                 SeedLightRiftways.removeRiftwayLocation(false, pos);
                 SeedLightRiftways.updateConfig();
                 SeedLightRiftways.sendUpdateRiftwayToPlayers(Objects.requireNonNull(player.getServer()));

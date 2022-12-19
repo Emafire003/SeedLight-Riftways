@@ -2,6 +2,7 @@ package me.emafire003.dev.seedlight_riftways.blocks.seedlight_plant;
 
 import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
 import me.emafire003.dev.seedlight_riftways.items.SeedlightRiftwaysItems;
+import me.emafire003.dev.seedlight_riftways.util.RiftwayDataPersistentState;
 import me.emafire003.dev.structureplacerapi.StructurePlacerAPI;
 import net.minecraft.block.*;
 import net.minecraft.item.*;
@@ -78,7 +79,6 @@ public class SeedLightPlantBlock extends CropBlock {
     public void spawnStructure(ServerWorld world, BlockPos pos){
         StructurePlacerAPI placer = new StructurePlacerAPI(world, new Identifier(MOD_ID, "riftway_general"), pos, BlockMirror.NONE, BlockRotation.NONE, true, 1.0f, new BlockPos(-6, -1, -6));
         placer.loadStructure();
-        SeedLightRiftways.addRiftwayLocation(false, pos);
     }
 
     @Override

@@ -8,10 +8,10 @@
     "PotionEntityMixin",
     "PlayerJoinMixin",
     "BundleItemInvoker",
-    "BundleItemUndropMixin"
+    "BundleItemUndropMixin",
+    "AddNameToWorldMixin"
   ],
   "client": [
-    "ConnectScreenMixin",
     "BlockBufferBuilderStorageMixin",
     "RenderLayersOfInvoker"
   ],

@@ -5,6 +5,7 @@ import me.emafire003.dev.seedlight_riftways.blocks.riftwayblock.RiftWayBlockEnti
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.block.NetherPortalBlock;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -35,12 +36,11 @@ public class ServerPacketsListener {
                 try{
                     //player.sendMessage(Text.literal("DEUBUG: Is Coming from direct portal: " + coming_from_direct));
                     //player.sendMessage(Text.literal("DEUBUG: Origin server: " + origin_server));
-                    BlockPos teleport_to = SeedLightRiftways.getClosestRiftway(origin_rift_pos);
+                    BlockPos teleport_to = SeedLightRiftways.getClosestRiftway(origin_rift_pos, player.getWorld());
                     LOGGER.info("Position chosen: " + teleport_to);
                     RiftWayBlockEntity.playExitRiftwaySoundEffect(player.getWorld(), teleport_to);
                     RiftWayBlockEntity.spawnExitRiftwayParticles(player.getWorld(), Vec3d.ofCenter(teleport_to.add(0,1,0)));
                     player.teleport(teleport_to.getX()+0.5, teleport_to.getY(), teleport_to.getZ()+0.5);
-
                     }catch (NoSuchElementException e){
                     LOGGER.warn("No value in the packet, probably not a big problem");
                 }catch (Exception e){

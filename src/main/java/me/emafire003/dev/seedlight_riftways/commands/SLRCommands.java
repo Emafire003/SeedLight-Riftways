@@ -11,7 +11,7 @@ public class SLRCommands {
     //Based on Factions' code https://github.com/ickerio/factions
     public static void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess registryAccess) {
         LiteralCommandNode<FabricClientCommandSource> lightcommands = ClientCommandManager
-                .literal("server")
+                .literal("connect")
                 .requires(ClientCommandSource -> {
                     return ClientCommandSource.hasPermissionLevel(2);
                 })

@@ -4,7 +4,7 @@ plugins {
 }
 
 loom {
-	accessWidenerPath = file("src/main/resources/seedlight_riftways.accesswidener")
+	accessWidenerPath = file("src/main/resources/seedlight_riftways.accessWidener")
 }
 
 sourceCompatibility = JavaVersion.VERSION_17

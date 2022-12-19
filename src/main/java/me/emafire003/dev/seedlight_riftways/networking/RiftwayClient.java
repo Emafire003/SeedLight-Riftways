@@ -4,18 +4,21 @@ import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
 import me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 import static me.emafire003.dev.seedlight_riftways.SeedLightRiftways.LOGGER;
 
 @Environment(EnvType.CLIENT)
 public class RiftwayClient implements Runnable{
+
+    //TODO make the messages translatable
 
     /**
      * When an object implementing interface {@code Runnable} is used
@@ -37,13 +40,55 @@ public class RiftwayClient implements Runnable{
         }
     }
 
+    /**This method checks if there is a riftway in the select world (the default one is the last played one)
+     * and if it finds a riftway it makes the player join the world*/
+    public static void connectWorld() throws ExecutionException, InterruptedException {
+        if(SeedLightRiftwaysClient.SERVER_IP.equalsIgnoreCase("local") || SeedLightRiftwaysClient.SERVER_IP.equalsIgnoreCase("local:")){
+            //This bit checks if the last played world has an active riftway. The first line gets the last played world for the client,
+            // the other two check if it's contained in the list of active riftways in the worlds
+            String worldName = Objects.requireNonNull(SeedLightRiftwaysClient.getLastPlayedWorld()).getName();
+            if(worldName == null){ // Null check, if it's null it means the level doesn't exist aka no worlds in the saves folder
+                SeedLightRiftwaysClient.sendFailedConnectionMessage("Maybe the world you have specified doesn't exist or is in another location!");
+            }
+            if(SeedLightRiftways.getIsRiftwayActiveInWorld().contains(worldName)){
+                SeedLightRiftwaysClient.playEnterRiftwaySoundEffect(); //TODO not sure which of the two of these gets triggered
+                SeedLightRiftwaysClient.connectToLocalWorldLastPlayed(); // Actually connecting to the world
+                SeedLightRiftwaysClient.playEnterRiftwaySoundEffect();
+            }else{
+                SeedLightRiftwaysClient.sendFailedConnectionMessage("No riftways present in that world!");
+            }
+        }
+        //This is an important bit. If the string IS "local" or "local:" there's the block above. If it STARTS with "local" but NOT "local:"
+        // it means the string is badly formatted, because it needs to be local:worldname.
+        // Not starting with "local:" but starting with "local" it means that the string is like this: "localworldname" which is incorrect
+        else if(SeedLightRiftwaysClient.SERVER_IP.startsWith("local") && !SeedLightRiftwaysClient.SERVER_IP.startsWith("local:")){
+            SeedLightRiftwaysClient.sendFailedConnectionMessage("The name of the world to connect to is badly formatted! It should be 'local:worldname' and not 'localworldname'");
+        }
+        else{ // Here there should be a bit of the string after "local:". That's the world name, the one the player will connect to
+            String worldName = SeedLightRiftwaysClient.SERVER_IP.replaceAll("local:", "");
+            if(SeedLightRiftways.getIsRiftwayActiveInWorld().contains(worldName)){
+                SeedLightRiftwaysClient.playEnterRiftwaySoundEffect(); //TODO not sure which of the two of these gets triggered
+                SeedLightRiftwaysClient.connectToLocalWorld(worldName); // Actually connecting to the world
+                SeedLightRiftwaysClient.playEnterRiftwaySoundEffect();
+            }else{
+                SeedLightRiftwaysClient.sendFailedConnectionMessage("No riftways present in that world!");
+            }
+        }
+        //Set back the initialization to false so the player can try to connect again
+        SeedLightRiftwaysClient.connection_initialised = false;
+    }
+
     public static void runClient() throws IOException
     {
         try
         {
             // getting localhost ip
+            if(SeedLightRiftwaysClient.SERVER_IP.startsWith("local")){
+                connectWorld();
+                return;
+            }
             InetAddress ip = InetAddress.getByName(SeedLightRiftwaysClient.SERVER_IP);
-            SeedLightRiftways.LOGGER.info("Asking the server " + ip + " if there are any active riftways...");
+            SeedLightRiftways.LOGGER.debug("Asking the server " + ip + " if there are any active riftways...");
 
             // establish the connection with server port SeedLightRiftways.LISTENER_PORT (9000 usually)
             Socket s = new Socket(ip, SeedLightRiftways.LISTENER_PORT);
@@ -57,17 +102,14 @@ public class RiftwayClient implements Runnable{
                 // information between client and client handler
                 while (true)
                 {
-                    LOGGER.info("Sending stuff");
-                    //TODO switch to the list of items
                     String tosend = SeedLightRiftwaysClient.SERVER_ITEMS_PASSWORD;
                     dos.writeUTF(tosend);
 
                     // printing date or time as requested by client
                     String received = dis.readUTF();
-                    LOGGER.info("The server said: " + received);
+                    LOGGER.debug("The server said: " + received);
 
                     if(received.equalsIgnoreCase("can_connect")){
-                        LOGGER.info("Whoooh connecting to the other server. I think. Hopefully");
                         SeedLightRiftwaysClient.playEnterRiftwaySoundEffect();
                         SeedLightRiftwaysClient.setConnectionAllowed();
                         SeedLightRiftwaysClient.playEnterRiftwaySoundEffect();
@@ -105,7 +147,7 @@ public class RiftwayClient implements Runnable{
             SeedLightRiftwaysClient.connection_initialised = false;
             LOGGER.info("Closing this connection : " + s);
             s.close();
-            LOGGER.info("Connection closed");
+            LOGGER.debug("Connection closed");
             dos.close();
         }catch(Exception e){
             SeedLightRiftwaysClient.sendFailedConnectionMessage("Maybe the server is offline or unreachable!");

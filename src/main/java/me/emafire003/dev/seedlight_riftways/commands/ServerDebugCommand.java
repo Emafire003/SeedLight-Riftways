@@ -9,6 +9,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 
@@ -33,7 +34,25 @@ public class ServerDebugCommand implements SLRCommand {
         FabricClientCommandSource source = context.getSource();
         String ip = StringArgumentType.getString(context, "ip");
         try{
-            SeedLightRiftwaysClient.connectToServer();
+            if(ip.startsWith("local:")){
+                ip = ip.replaceAll("local:", "");
+                SeedLightRiftwaysClient.connectToLocalWorld(ip);
+            }else{
+                SeedLightRiftwaysClient.connectToServer();
+            }
+            return 1;
+        }catch(Exception e){
+            e.printStackTrace();
+            return 0;
+        }
+
+    }
+
+    private int connectLocal(CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
+        FabricClientCommandSource source = context.getSource();
+
+        try{
+            SeedLightRiftwaysClient.connectToLocalWorldLastPlayed();
             return 1;
         }catch(Exception e){
             e.printStackTrace();
@@ -45,7 +64,10 @@ public class ServerDebugCommand implements SLRCommand {
 
     public LiteralCommandNode<FabricClientCommandSource> getNode() {
         return ClientCommandManager
-                .literal("connect").executes(this::connect)
+                .literal("server").executes(this::connect)
+                .then(
+                        ClientCommandManager.literal("local").executes(this::connectLocal)
+                )
                 .then(
                         ClientCommandManager.argument("ip", StringArgumentType.string()).executes(this::connectTo)
                 )

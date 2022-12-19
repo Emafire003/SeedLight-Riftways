@@ -32,6 +32,9 @@ public class ConfigDataSaver {
     @ConfigEntry
     public boolean requires_password = SeedLightRiftways.getRequiresPassword();
 
+    @ConfigEntry
+    public List<String> is_riftway_active_in_world = SeedLightRiftways.getIsRiftwayActiveInWorld();
+
     /*public Screen createGui(Screen parent) {
         // time to use YOCL!
         return new TitleScreen();

@@ -94,9 +94,10 @@ public class RiftWayBlock extends BlockWithEntity {
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        Thread thread = new Thread(() -> addNewRiftLoc(6, pos, world)); // It needs to check 200+ blocks after all
+        /*Thread thread = new Thread(() -> addNewRiftLoc(6, pos, world)); // It needs to check 200+ blocks after all
         thread.setName("riftloc_check");
-        thread.start();
+        thread.start();*/
+        addNewRiftLoc(6, pos, world);
         super.onPlaced(world, pos, state, placer, itemStack);
     }
 
@@ -106,6 +107,7 @@ public class RiftWayBlock extends BlockWithEntity {
      *
      * */
     public boolean addNewRiftLoc(int rad, BlockPos origin, World world){
+        SeedLightRiftways.LOGGER.info("Checking if adding a new riftloc is possible");
         for(int y = -rad; y <= rad; y++)
         {
             for(int x = -rad; x <= rad; x++)
@@ -113,7 +115,8 @@ public class RiftWayBlock extends BlockWithEntity {
                 for(int z = -rad; z <= rad; z++)
                 {
                     BlockPos pos = origin.add(x, y, z);
-                    if(world.getBlockState(pos).getBlock() instanceof RiftWayBlock){
+                    if(!pos.equals(origin) && world.getBlockState(pos).getBlock() instanceof RiftWayBlock){
+                        SeedLightRiftways.LOGGER.info("Nope, another riftblock found at: " + pos.toString());
                         return false;
                     }
 
@@ -147,6 +150,7 @@ public class RiftWayBlock extends BlockWithEntity {
                 player.getWorld().playSound((double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), SoundEvents.BLOCK_AMETHYST_BLOCK_HIT, SoundCategory.AMBIENT, 1f, 1.7f, true);
 
                 ServerWorld sworld = ((ServerWorld) player.getWorld());
+                RiftWayBlockEntity.playSetRiftwayDestination(sworld, pos);
                 //If the server is NOT dedicated, it means it's integrated which means it's in singleplayer
                 if(!sworld.getServer().isDedicated()){
                     SeedLightRiftways.setIsRiftwayActiveInWorld(true, ((INamedSeverWorld)sworld).getLevelName());
@@ -158,6 +162,7 @@ public class RiftWayBlock extends BlockWithEntity {
                 checkAddress.setAddress(SERVER_IP);
                 checkAddress.setPlayer(player);
                 checkAddress.start();
+                RiftWayBlockEntity.playSetRiftwayDestination(player);
                 SeedLightRiftwaysClient.IS_RIFTWAY_ACTIVE = true;
             }
             if(!player.getAbilities().creativeMode){
@@ -166,11 +171,6 @@ public class RiftWayBlock extends BlockWithEntity {
 
             return ActionResult.PASS;
         }else if(itemStack.getItem() instanceof FireChargeItem){
-            if(!player.getWorld().isClient){
-                //TODO lang translatable
-                player.sendMessage(Text.literal(SeedLightRiftways.PREFIX+" §bThe riftway has been deactivated!"));
-                SeedLightRiftways.updateConfig();
-            }
             //Validate name as IP address
             if(!player.getAbilities().creativeMode){
                 itemStack.decrement(1);
@@ -179,22 +179,27 @@ public class RiftWayBlock extends BlockWithEntity {
             if(!player.getWorld().isClient){
                 SeedLightRiftways.IS_RIFTWAY_ACTIVE = false;
                 ServerWorld sworld = ((ServerWorld) player.getWorld());
+                RiftWayBlockEntity.playTurnOffRiftway(sworld, pos);
                 //If the server is NOT dedicated, it means it's integrated which means it's in singleplayer
                 if(!sworld.getServer().isDedicated()){
                     SeedLightRiftways.setIsRiftwayActiveInWorld(false, ((INamedSeverWorld)sworld).getLevelName());
                 }
                 SeedLightRiftways.removeRiftwayLocation(false, pos);
+                //TODO lang translatable
+                player.sendMessage(Text.literal(SeedLightRiftways.PREFIX+" §bThe riftway has been deactivated!"));
                 SeedLightRiftways.updateConfig();
                 SeedLightRiftways.sendUpdateRiftwayToPlayers(Objects.requireNonNull(player.getServer()));
             }//CLIENT BITS
             else{
                 //Probably redundant since the packets
+                RiftWayBlockEntity.playTurnOffRiftway(player);
                 SeedLightRiftwaysClient.IS_RIFTWAY_ACTIVE = false;
             }
 
             return ActionResult.PASS;
         }else if(itemStack.getItem() instanceof BundleItem && player.hasPermissionLevel(2) && !world.isClient){
             //BundleItemInvoker bundle = (BundleItemInvoker) itemStack.getItem();
+            RiftWayBlockEntity.playSetRiftwayDestination(player);
             List<ItemStack> items = BundleItemInvoker.getBundledStacksInv(itemStack).toList();
             SeedLightRiftways.SERVER_RIFTWAY_ITEMS_PASSWORD.clear();
             if(items.isEmpty()){

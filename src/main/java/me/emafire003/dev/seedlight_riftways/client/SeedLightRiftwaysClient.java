@@ -54,6 +54,8 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
     //The Render Thread, aka the minecraft client, checks it. Whenever it is true it connects to the
     //server with SERVER_IP, etc provied above
     private static boolean connection_allowed = false;
+    //Same thing but for the connectWorld
+    private static boolean local_connection_allowed = false;
 
 
     /**
@@ -79,6 +81,19 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
             if(connection_allowed){
                 connection_allowed = false;
                 connectToServer();
+            }else if(local_connection_allowed){
+                local_connection_allowed = false;
+                try {
+                    if(SERVER_IP.equalsIgnoreCase("local") || SERVER_IP.equalsIgnoreCase("local:")){
+                        connectToLocalWorldLastPlayed();
+                    }else{ // I already checked for scenarios like "localhost" in the RiftwayClient so it's ok
+                        connectToLocalWorld(SERVER_IP.replaceAll("local:", ""));
+                    }
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -92,12 +107,29 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
         connection_allowed = true;
     }
 
+    /**This method should only be called by the RiftwayClient thread
+     *
+     * This method will make the client connect to the local world. It
+     * is kind of the equivalent of connectToLocalWorld() but can be called
+     * by other threads other than the Render Thread*/
+    public static void setLocalConnectionAllowed(){
+        local_connection_allowed = true;
+    }
+
     public static void stopConnectionAllowed(){
         connection_allowed = false;
     }
 
+    public static void stopLocalConnectionAllowed(){
+        local_connection_allowed = false;
+    }
+
     public static boolean getConnectionAllowed(){
         return connection_allowed;
+    }
+
+    public static boolean getLocalConnectionAllowed(){
+        return local_connection_allowed;
     }
 
     private void registerUpdateRiftwayActivenessPacket(){
@@ -268,12 +300,12 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
         connection_initialised = false;
         List<LevelSummary> levels_summaries = client.getLevelStorage().loadSummaries(client.getLevelStorage().getLevelList()).get();
 
-        LevelStorage.LevelSave save = new LevelStorage.LevelSave(client.getLevelStorage().getSavesDirectory().resolve(level_name));
-
         for(LevelSummary levelSummary : levels_summaries){
             if(!levelSummary.isLocked() && levelSummary.getName().equals(level_name)){
                 WorldListWidget levelList = null;
-                levelList = new WorldListWidget(new SelectWorldScreen(new TitleScreen()), MinecraftClient.getInstance(), 100, 100, 48, 100 - 64, 36, "hello", levelList);
+                SelectWorldScreen selectWorldScreen = new SelectWorldScreen(new TitleScreen());
+                client.setScreen(selectWorldScreen);
+                levelList = new WorldListWidget(selectWorldScreen, MinecraftClient.getInstance(), 100, 100, 48, 100 - 64, 36, "hello", levelList);
                 levelList.new WorldEntry(levelList, levelSummary).play();
                 break;
             }
@@ -291,7 +323,8 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
             if(levelSum == null){
                 levelSum = levelSummary;
             }
-            if(levelSummary.getLastPlayed() < levelSum.getLastPlayed()){
+            //TODO this does not work, they are dates not numbers
+            if(levelSummary.getLastPlayed() > levelSum.getLastPlayed()){
                 levelSum = levelSummary;
             }
         }
@@ -307,7 +340,6 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
         coming_from_riftway = true;
         playEnterRiftwaySoundEffect();
         connection_initialised = false;
-        List<LevelSummary> levels_summaries = client.getLevelStorage().loadSummaries(client.getLevelStorage().getLevelList()).get();
 
         LevelSummary levelSum = getLastPlayedWorld();
 

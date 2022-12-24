@@ -8,6 +8,7 @@ import net.minecraft.world.PersistentState;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class RiftwayDataPersistentState extends PersistentState {
 
@@ -27,11 +28,10 @@ public class RiftwayDataPersistentState extends PersistentState {
         riftway_local_pos.put(pos.asLong(), isDirect);
     }
 
-
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
         NbtCompound locations = new NbtCompound();
-        locations.putLongArray("rift_locations", (List<Long>) riftway_local_pos.keySet());
+        locations.putLongArray("rift_locations", riftway_local_pos.keySet().stream().toList());
         for(Map.Entry entry : this.riftway_local_pos.entrySet()){
             locations.putBoolean("rift_" + entry.getKey().toString(), (Boolean) entry.getValue());
         }

@@ -161,6 +161,7 @@ public class RiftWayBlockEntity extends EndPortalBlockEntity {
         world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ALLAY_AMBIENT_WITH_ITEM, SoundCategory.BLOCKS, 1f, 0.25f, false);
         world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.BLOCKS, 1f, 1.7f, false);
         world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PORTAL_TRIGGER, SoundCategory.BLOCKS, 1f, 0.1f, false);
+        world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_RESPAWN_ANCHOR_AMBIENT, SoundCategory.BLOCKS, 1f, 0.5f, false);
         LOGGER.info("Played");
     }
 
@@ -194,6 +195,36 @@ public class RiftWayBlockEntity extends EndPortalBlockEntity {
         ((ServerWorld) world).spawnParticles(ParticleTypes.ENCHANT, pos.getX(), pos.getY()+0.5, pos.getZ(), 100, 0.2, 0.6, 0.2, 0.15);
         ((ServerWorld) world).spawnParticles(ParticleTypes.FLASH, pos.getX(), pos.getY()+0.5, pos.getZ(), 1, 0.2, 0.7, 0.2, 0.15);
         ((ServerWorld) world).spawnParticles(ParticleTypes.GLOW, pos.getX(), pos.getY()+0.5, pos.getZ(), 100, 0.5, 0.7, 0.5, 0.7);
+    }
+
+    public static void playTurnOffRiftway(World world, BlockPos pos){
+        world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_AMETHYST_CLUSTER_PLACE, SoundCategory.BLOCKS, 1f, 1.5f, false);
+        world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.3f, 0.3f, false);
+        world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE, SoundCategory.BLOCKS, 1f, 0.6f, false);
+        world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, SoundCategory.BLOCKS, 1f, 0.1f, false);
+    }
+
+    public static void playTurnOffRiftway(PlayerEntity player){
+        player.playSound(SoundEvents.BLOCK_AMETHYST_CLUSTER_PLACE, 1, 1.5f);
+        player.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 0.3f, 0.3f);
+        player.playSound(SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE, 1, 0.6f);
+        player.playSound(SoundEvents.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, 1, 0.1f);
+    }
+
+    public static void playSetRiftwayDestination(PlayerEntity player){
+        player.playSound(SoundEvents.BLOCK_RESPAWN_ANCHOR_CHARGE, 0.45f, 0.7f);
+        player.playSound(SoundEvents.BLOCK_RESPAWN_ANCHOR_CHARGE, 0.45f, 1.7f);
+        player.playSound(SoundEvents.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, 1, 0.7f);
+        player.playSound(SoundEvents.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, 1, 1.6f);
+        player.playSound(SoundEvents.BLOCK_AZALEA_BREAK, 1, 1.3f);
+    }
+
+    public static void playSetRiftwayDestination(World world, BlockPos pos){
+        world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_RESPAWN_ANCHOR_CHARGE, SoundCategory.BLOCKS, 0.45f, 0.7f, false);
+        world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_RESPAWN_ANCHOR_CHARGE, SoundCategory.BLOCKS, 0.45f, 1.7f, false);
+        world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_AZALEA_BREAK, SoundCategory.BLOCKS, 1f, 1.4f, false);
+        world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, SoundCategory.BLOCKS, 1f, 0.7f, false);
+        world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, SoundCategory.BLOCKS, 1f, 1.6f, false);
     }
     
 }

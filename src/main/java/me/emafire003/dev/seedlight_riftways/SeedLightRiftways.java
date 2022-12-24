@@ -100,6 +100,7 @@ public class SeedLightRiftways implements ModInitializer {
         ConfigDataSaver.CONFIG_INSTANCE.getConfig().saved_server_ip = getSavedServerIp();
         ConfigDataSaver.CONFIG_INSTANCE.getConfig().listener_port = getListenerPort();
         ConfigDataSaver.CONFIG_INSTANCE.getConfig().requires_password = getRequiresPassword();
+        ConfigDataSaver.CONFIG_INSTANCE.getConfig().is_riftway_active_in_world = getIsRiftwayActiveInWorld();
         ConfigDataSaver.CONFIG_INSTANCE.save();
     }
 
@@ -147,17 +148,20 @@ public class SeedLightRiftways implements ModInitializer {
     public static void addRiftwayLocation(boolean isDirect, BlockPos pos, World world){
         RIFTWAYS_LOCATIONS.put(pos.asLong(), isDirect);
         addRiftwayLocationLocal(isDirect, pos, world);
-        ConfigDataSaver.CONFIG_INSTANCE.save();
+        LOGGER.info("Adding riftway location, " + RIFTWAYS_LOCATIONS.toString());
+        updateConfig();
     }
+
 
     public static void addRiftwayLocationLocal(boolean isDirect, BlockPos pos, World world){
         try{
-            if(!world.isClient){
+            if(!world.isClient){ //Ensures it runs on the server
                 LOGGER.info("Nope, world isn't client, is the server dedicated? : " + ((ServerWorld) world).getServer().isDedicated());
                 //If it's not dedicated it's integrated so we are in in singleplayer
                 if(!((ServerWorld) world).getServer().isDedicated()){
                     RiftwayDataPersistentState locations_data = ((ServerWorld) world).getPersistentStateManager().getOrCreate(RiftwayDataPersistentState::readNbt, RiftwayDataPersistentState::getInstance, "riftways_locations");
                     locations_data.addLocalRiftwayLocation(isDirect, pos);
+                    LOGGER.info("Adding riftway location locally, " + locations_data.riftway_local_pos.toString());
                 }
             }
         }catch (Exception e){
@@ -205,18 +209,23 @@ public class SeedLightRiftways implements ModInitializer {
         }
     }
 
+    //TODO remove debug info
     public static BlockPos getClosestRiftway(BlockPos origin_rift_pos, World world){
-        LOGGER.debug("DEUBUG: Origin server pos: " + origin_rift_pos);
+        LOGGER.info("DEUBUG: Origin server pos: " + origin_rift_pos);
         BlockPos teleport_to = BlockPos.ORIGIN;
         boolean first = true;
         Set<Map.Entry<Long, Boolean>> entrySet = SeedLightRiftways.RIFTWAYS_LOCATIONS.entrySet();
+        LOGGER.info("The RiftwayLocations" + Arrays.stream(entrySet.toArray()).toList().toString());
         if(!world.isClient){
-            if(world.getServer().isDedicated()){
+            if(!world.getServer().isDedicated()){ //If not dedicated it's integrated so singleplayer
+                LOGGER.info("Ok it's on singleplayer, checking the locations_data");
                 RiftwayDataPersistentState locations_data = ((ServerWorld) world).getPersistentStateManager().getOrCreate(RiftwayDataPersistentState::readNbt, RiftwayDataPersistentState::getInstance, "riftways_locations");
                 entrySet = locations_data.riftway_local_pos.entrySet();
+                LOGGER.info("The RiftwayLocations single" + Arrays.stream(entrySet.toArray()).toList().toString());
             }
         }
         for(Map.Entry<Long, Boolean> entry : entrySet){
+            LOGGER.info("Hello we are in the for, with this entry: " + entry.toString());
             boolean is_direct = entry.getValue();
             long pos_long = entry.getKey();
             if(!is_direct){

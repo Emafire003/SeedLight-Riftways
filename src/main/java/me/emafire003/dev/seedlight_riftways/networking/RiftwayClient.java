@@ -4,6 +4,7 @@ import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
 import me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -46,13 +47,18 @@ public class RiftwayClient implements Runnable{
         if(SeedLightRiftwaysClient.SERVER_IP.equalsIgnoreCase("local") || SeedLightRiftwaysClient.SERVER_IP.equalsIgnoreCase("local:")){
             //This bit checks if the last played world has an active riftway. The first line gets the last played world for the client,
             // the other two check if it's contained in the list of active riftways in the worlds
+            if(MinecraftClient.getInstance().isInSingleplayer()){ //If it's the last played and we are in single player, it will just connect to itself
+                SeedLightRiftwaysClient.setLocalConnectionAllowed();
+                return;
+            }
             String worldName = Objects.requireNonNull(SeedLightRiftwaysClient.getLastPlayedWorld()).getName();
             if(worldName == null){ // Null check, if it's null it means the level doesn't exist aka no worlds in the saves folder
                 SeedLightRiftwaysClient.sendFailedConnectionMessage("Maybe the world you have specified doesn't exist or is in another location!");
+                return;
             }
             if(SeedLightRiftways.getIsRiftwayActiveInWorld().contains(worldName)){
                 SeedLightRiftwaysClient.playEnterRiftwaySoundEffect(); //TODO not sure which of the two of these gets triggered
-                SeedLightRiftwaysClient.connectToLocalWorldLastPlayed(); // Actually connecting to the world
+                SeedLightRiftwaysClient.setLocalConnectionAllowed(); // Actually connecting to the world
                 SeedLightRiftwaysClient.playEnterRiftwaySoundEffect();
             }else{
                 SeedLightRiftwaysClient.sendFailedConnectionMessage("No riftways present in that world!");
@@ -68,14 +74,12 @@ public class RiftwayClient implements Runnable{
             String worldName = SeedLightRiftwaysClient.SERVER_IP.replaceAll("local:", "");
             if(SeedLightRiftways.getIsRiftwayActiveInWorld().contains(worldName)){
                 SeedLightRiftwaysClient.playEnterRiftwaySoundEffect(); //TODO not sure which of the two of these gets triggered
-                SeedLightRiftwaysClient.connectToLocalWorld(worldName); // Actually connecting to the world
+                SeedLightRiftwaysClient.setLocalConnectionAllowed(); // Actually connecting to the world
                 SeedLightRiftwaysClient.playEnterRiftwaySoundEffect();
             }else{
-                SeedLightRiftwaysClient.sendFailedConnectionMessage("No riftways present in that world!");
+                SeedLightRiftwaysClient.sendFailedConnectionMessage("1No riftways present in that world!");
             }
         }
-        //Set back the initialization to false so the player can try to connect again
-        SeedLightRiftwaysClient.connection_initialised = false;
     }
 
     public static void runClient() throws IOException
@@ -85,6 +89,7 @@ public class RiftwayClient implements Runnable{
             // getting localhost ip
             if(SeedLightRiftwaysClient.SERVER_IP.startsWith("local")){
                 connectWorld();
+                SeedLightRiftwaysClient.connection_initialised = false;
                 return;
             }
             InetAddress ip = InetAddress.getByName(SeedLightRiftwaysClient.SERVER_IP);

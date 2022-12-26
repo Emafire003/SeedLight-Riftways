@@ -1,7 +1,7 @@
 package me.emafire003.dev.seedlight_riftways.networking;
 
 import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
-import me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient;
+import me.emafire003.dev.seedlight_riftways.SeedLightRiftwaysClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;

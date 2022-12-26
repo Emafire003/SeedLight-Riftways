@@ -1,17 +1,13 @@
 package me.emafire003.dev.seedlight_riftways.commands;
 
 
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient;
+import me.emafire003.dev.seedlight_riftways.SeedLightRiftwaysClient;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
 
 public class ServerDebugCommand implements SLRCommand {
     

@@ -2,7 +2,7 @@ package me.emafire003.dev.seedlight_riftways.blocks.riftwayblock;
 
 import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
 import me.emafire003.dev.seedlight_riftways.blocks.SLRBlocks;
-import me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient;
+import me.emafire003.dev.seedlight_riftways.SeedLightRiftwaysClient;
 import me.emafire003.dev.seedlight_riftways.items.InterRiftwaysLeafItem;
 import me.emafire003.dev.seedlight_riftways.mixin.BundleItemInvoker;
 import me.emafire003.dev.seedlight_riftways.util.CheckValidAddress;
@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 
-import static me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient.SERVER_IP;
+import static me.emafire003.dev.seedlight_riftways.SeedLightRiftwaysClient.SERVER_IP;
 import static me.emafire003.dev.seedlight_riftways.items.InterRiftwaysLeafItem.NBT_SERVERIP_KEY;
 
 public class RiftWayBlock extends BlockWithEntity {

@@ -54,9 +54,7 @@ public class SeedLightRiftways implements ModInitializer {
         PlayerJoinServerCallback.registerEvents();
         LootTableModifier.modifyLootTables();
         LOGGER.info("Starting Listener server...");
-        Thread listener_thread = new Thread(new RiftwayListener());
-        listener_thread.setName(MOD_ID + " Listener_Thread");
-        listener_thread.start();
+
     }
 
     public static HashMap<Long, Boolean> getRiftwaysLocations(){

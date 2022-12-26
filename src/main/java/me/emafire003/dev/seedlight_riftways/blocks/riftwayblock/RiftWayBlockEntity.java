@@ -3,7 +3,7 @@ package me.emafire003.dev.seedlight_riftways.blocks.riftwayblock;
 import com.mojang.logging.LogUtils;
 import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
 import me.emafire003.dev.seedlight_riftways.blocks.SLRBlocks;
-import me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient;
+import me.emafire003.dev.seedlight_riftways.SeedLightRiftwaysClient;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.EndPortalBlockEntity;

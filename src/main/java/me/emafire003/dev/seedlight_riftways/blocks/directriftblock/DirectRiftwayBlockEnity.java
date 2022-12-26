@@ -1,7 +1,7 @@
 package me.emafire003.dev.seedlight_riftways.blocks.directriftblock;
 
 import me.emafire003.dev.seedlight_riftways.blocks.riftwayblock.RiftWayBlockEntity;
-import me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient;
+import me.emafire003.dev.seedlight_riftways.SeedLightRiftwaysClient;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;

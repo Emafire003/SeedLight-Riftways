@@ -22,7 +22,10 @@
       "me.emafire003.dev.seedlight_riftways.SeedLightRiftways"
     ],
     "client": [
-      "me.emafire003.dev.seedlight_riftways.client.SeedLightRiftwaysClient"
+      "me.emafire003.dev.seedlight_riftways.SeedLightRiftwaysClient"
+    ],
+    "server": [
+      "me.emafire003.dev.seedlight_riftways.SeedLightRiftwaysServer"
     ]
   },
   "accessWidener" : "seedlight_riftways.accessWidener",

@@ -1,9 +1,10 @@
-package me.emafire003.dev.seedlight_riftways.client;
+package me.emafire003.dev.seedlight_riftways;
 
 import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
 import me.emafire003.dev.seedlight_riftways.blocks.SLRBlocks;
 import me.emafire003.dev.seedlight_riftways.blocks.riftwayblock.RiftWayBlockEntity;
 import me.emafire003.dev.seedlight_riftways.blocks.riftwayblock.RiftwayBlockEntityRenderer;
+import me.emafire003.dev.seedlight_riftways.client.SLRRenderLayers;
 import me.emafire003.dev.seedlight_riftways.commands.SLRCommands;
 import me.emafire003.dev.seedlight_riftways.events.PlayerJoinServerCallback;
 import me.emafire003.dev.seedlight_riftways.networking.*;

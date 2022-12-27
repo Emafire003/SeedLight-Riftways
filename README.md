@@ -52,6 +52,8 @@ To **deactivate** it you can right-click on it using a Fire Charge, and it will 
 
 You can also set a **combination** of items that is required to travel through your Riftway portal. To do this, fill a Bundle with the items that will make up your combination, and right-click on the riftway! Now everyone trying to get thorugh your riftway will need to add this before entering. (Warning: No encryption see the Disclaimer section down below). 
 
+To remove a combination, simply empty the bundle and click again.
+
 #### Connection to a riftway which is locked behind an item combination
 If you want to connect to riftway that requires an item combination/password you will need to 1) Know the exact item combination, so go ask for it 2) You will need to fill up a Bundle in the exact same way as the combination given to you. 3) Simply hold it in your hand when travelling through the Riftway.
 

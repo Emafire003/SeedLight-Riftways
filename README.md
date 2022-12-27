@@ -61,7 +61,7 @@ If you want to connect to riftway that requires an item combination/password you
 In survival you can't yet (blame Mojang), but there are some datapacks/mods that allow you to do so. Or if you want you can use the /give command to get it.
 
 
-### Extra/"Advanced" stuff
+### Extra info and also stuff
 If you are like a server admin or you would simply like to have a bigger portal, there is a block in the creative inverntory call "Riftway Block". Place it down as you like, you can create a portal as big as you like. As long as you place a riftway block that is no further away than 10 blocks from another one it still going to count as one. This is important because:
 
 If more than one riftway portal is present when a player connects though it, it will be spawned at the closest one to where the player orignally came from.
@@ -69,6 +69,8 @@ For example, if a player stepped into his own riftway at 0 64 0, and there are t
 
 You can collect the riftway wood and use into your builds, but the bark is thick that it would be impossible to cut it down into planks.
 You can also collect the leaves with shears or silk touch. 
+
+When going through a riftway you activate a cooldown of ~10 seconds in which you can't enter another riftway. This is done to prevent looping inside a limbo of joining a sever, being sent to another one ecc...
 
 ## Plans
 This mod is currently in ALPHA, meaning: It probably has bugs that will be fixed and also, quite a bit of conent is missing, such as 

@@ -1,8 +1,8 @@
 package me.emafire003.dev.seedlight_riftways.util;
 
-import dev.isxander.yacl.config.ConfigEntry;
-import dev.isxander.yacl.config.GsonConfigInstance;
 import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
+import me.emafire003.dev.seedlight_riftways.util.config.ConfigEntry;
+import me.emafire003.dev.seedlight_riftways.util.config.GsonConfigInstance;
 
 import java.util.HashMap;
 import java.util.List;

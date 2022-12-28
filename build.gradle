@@ -28,14 +28,14 @@ repositories {
 		}
 	}
 
-	maven {
+	/*maven {
 		url "https://maven.terraformersmc.com/releases/"
 		content {
 			includeGroup "com.terraformersmc"
 		}
 	}
 
-	maven { url = "https://maven.isxander.dev/releases" }
+	maven { url = "https://maven.isxander.dev/releases" }*/
 }
 
 dependencies {
@@ -57,9 +57,9 @@ dependencies {
 	include "maven.modrinth:structureplacerapi:${project.structureplacerapi_version}"
 
 	//Config Lib
-	modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
+	/*modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
 	include "dev.isxander:yet-another-config-lib:${project.yacl_version}"
-	modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+	modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"*/
 
 }
 

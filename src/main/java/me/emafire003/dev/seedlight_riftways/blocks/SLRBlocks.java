@@ -94,7 +94,7 @@ public class SLRBlocks {
 
     public static void registerAllBlockEntities() {
         RIFTWAY_BLOCKENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE,
-                new Identifier(SeedLightRiftways.MOD_ID, "square_portal"),
+                new Identifier(SeedLightRiftways.MOD_ID, "riftway"),
                 FabricBlockEntityTypeBuilder.create(RiftWayBlockEntity::new,
                         RIFTWAY_BLOCK).build());
     }

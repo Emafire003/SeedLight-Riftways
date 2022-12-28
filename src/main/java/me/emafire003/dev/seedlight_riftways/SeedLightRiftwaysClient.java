@@ -70,7 +70,7 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(SLRBlocks.SEEDLIGHT_PLANT, RenderLayer.getCutout());
         registerUpdateRiftwayActivenessPacket();
         registerUpdateRiftwayIpPacket();
-        registerUpdateRiftwayPasswordPacket();
+        //registerUpdateRiftwayPasswordPacket();
         PlayerJoinServerCallback.registerJoinEvent();
 
         registerComingFromRiftwaySenderEvent();
@@ -150,7 +150,7 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
         }));
     }
 
-    private void registerUpdateRiftwayPasswordPacket(){
+    /*private void registerUpdateRiftwayPasswordPacket(){
         ClientPlayNetworking.registerGlobalReceiver(UpdateRiftwayPasswordS2C.ID, ((client, handler, buf, responseSender) -> {
             var result = UpdateRiftwayPasswordS2C.read(buf);
 
@@ -165,7 +165,7 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
                 }
             });
         }));
-    }
+    }*/
 
     private void registerUpdateRiftwayIpPacket(){
         ClientPlayNetworking.registerGlobalReceiver(UpdateRiftwayIpS2C.ID, ((client, handler, buf, responseSender) -> {

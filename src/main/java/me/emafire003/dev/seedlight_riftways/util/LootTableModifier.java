@@ -82,9 +82,9 @@ public class LootTableModifier {
 
                 LootPool.Builder poolBuilder1 = LootPool.builder()
                         .rolls(ConstantLootNumberProvider.create(1))
-                        .conditionally(RandomChanceLootCondition.builder(base_chance+0.10f))
+                        .conditionally(RandomChanceLootCondition.builder(base_chance+0.05f))
                         .with(ItemEntry.builder(SeedlightRiftwaysItems.INTERRIFTWAYS_LEAF))
-                        .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 2.0f)).build());
+                        .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 1.0f)).build());
                 supplier.pool(poolBuilder1.build());
 
             }

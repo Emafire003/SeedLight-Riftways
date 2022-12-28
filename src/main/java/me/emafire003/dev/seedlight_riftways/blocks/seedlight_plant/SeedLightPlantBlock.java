@@ -2,7 +2,6 @@ package me.emafire003.dev.seedlight_riftways.blocks.seedlight_plant;
 
 import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
 import me.emafire003.dev.seedlight_riftways.items.SeedlightRiftwaysItems;
-import me.emafire003.dev.seedlight_riftways.util.RiftwayDataPersistentState;
 import me.emafire003.dev.structureplacerapi.StructurePlacerAPI;
 import net.minecraft.block.*;
 import net.minecraft.item.*;

@@ -29,6 +29,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -97,8 +98,15 @@ public class RiftWayBlock extends BlockWithEntity {
         /*Thread thread = new Thread(() -> addNewRiftLoc(6, pos, world)); // It needs to check 200+ blocks after all
         thread.setName("riftloc_check");
         thread.start();*/
-        addNewRiftLoc(6, pos, world);
+        addNewRiftLoc(10, pos, world);
         super.onPlaced(world, pos, state, placer, itemStack);
+    }
+
+
+    @Override
+    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
+        removeRiftwayLocation(10, pos, (World) world);
+        super.onBroken(world, pos, state);
     }
 
     /**Checks of other blocks of the same type as this one close by
@@ -107,7 +115,8 @@ public class RiftWayBlock extends BlockWithEntity {
      *
      * */
     public boolean addNewRiftLoc(int rad, BlockPos origin, World world){
-        SeedLightRiftways.LOGGER.info("Checking if adding a new riftloc is possible");
+        SeedLightRiftways.LOGGER.debug("Checking if adding a new riftloc is possible");
+
         for(int y = -rad; y <= rad; y++)
         {
             for(int x = -rad; x <= rad; x++)
@@ -116,7 +125,7 @@ public class RiftWayBlock extends BlockWithEntity {
                 {
                     BlockPos pos = origin.add(x, y, z);
                     if(!pos.equals(origin) && world.getBlockState(pos).getBlock() instanceof RiftWayBlock){
-                        SeedLightRiftways.LOGGER.info("Nope, another riftblock found at: " + pos.toString());
+                        SeedLightRiftways.LOGGER.debug("Nope, another riftblock found at: " + pos.toString());
                         return false;
                     }
 
@@ -126,6 +135,30 @@ public class RiftWayBlock extends BlockWithEntity {
         //If no match has been found, return true.
         SeedLightRiftways.addRiftwayLocation(false, origin, world);
         return true;
+    }
+
+
+
+    /**This method is called when the block breaks, it checks for other Riftway Blocks
+     * nearby and if there are moves the RiftwayLoc on the first it finds. Otherwise, it simply removes the Riftway Location*/
+    private void removeRiftwayLocation(int rad, BlockPos origin, World world){
+        for(int y = -rad; y <= rad; y++)
+        {
+            for(int x = -rad; x <= rad; x++)
+            {
+                for(int z = -rad; z <= rad; z++)
+                {
+                    BlockPos pos = origin.add(x, y, z);
+                    if(!pos.equals(origin) && world.getBlockState(pos).getBlock() instanceof RiftWayBlock){
+                        SeedLightRiftways.addRiftwayLocation(false, pos, world); //Adds the new one
+                        SeedLightRiftways.removeRiftwayLocation(false, origin, world); //Removes the old one
+                        return;
+                    }
+
+                }
+            }
+        }
+        SeedLightRiftways.removeRiftwayLocation(false, origin, world);
     }
 
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
@@ -184,7 +217,7 @@ public class RiftWayBlock extends BlockWithEntity {
                 if(!sworld.getServer().isDedicated()){
                     SeedLightRiftways.setIsRiftwayActiveInWorld(false, ((INamedSeverWorld)sworld).getLevelName());
                 }
-                SeedLightRiftways.removeRiftwayLocation(false, pos);
+                SeedLightRiftways.removeRiftwayLocation(false, pos, world);
                 //TODO lang translatable
                 player.sendMessage(Text.literal(SeedLightRiftways.PREFIX+" §bThe riftway has been deactivated!"));
                 SeedLightRiftways.updateConfig();

@@ -99,8 +99,10 @@ That said, it is only stored inside a data file on the server, so provided your 
 
 - To make the client know if the server it is trying to join has riftway or not a socket-sever will be started, default port is 27999. Everytime a client connects a new thread is created to exchange information between the two, it should close right after the server respond, but bugs exist so watch out and, in the event something goes wrong please report it! (Also, restart the server in that case)
 
-## Setup on a server
-To make your sever visible to client connecting to it using riftways you will need to open a port for communication (a socket-server to exchange info between client and server, is started whenever you load the mod on a server). By default itis 27999 (TCP) but you can change it in the data file (located in the /config/ folder)
+- Also, small detail: to make the bundle-combination lock thingy I had to move the right-click action of dropping all the contents of the bundle to a shift-right-click. (I think it's better this way, but I'll probably add an option to disable this later on)
+
+## Extra setup required on a server
+To make your sever visible to client connecting to it using riftways you will need to open a port for communication (a socket-server to exchange info between client and server, is started whenever you load the mod on a server). By default it is 27999 (TCP) but you can change it in the data file (located in the /config/ folder)
 
 ## License
 

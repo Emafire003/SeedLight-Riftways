@@ -113,14 +113,14 @@ This mod is currently in ALPHA, meaning: It probably has bugs that will be fixed
 
 ## DISCLAIMER (Important, please read!)
 What this mod **CAN NOT** and **WILL NOT** DO:
-- It can't bypass server authenitcation plugins or whitelist or anything, it doesn't rewrite any of the code that actually makes you connect to a server. To the server's eyes, you are simply connection to it. The only thing it will know is that you came from a riftway, and it will teleport you to the closest one. I repeat, it CANNOT bypass server security and it won't do that.
+- **It can't bypass server authenitcation plugins or whitelist or anything**, it doesn't rewrite any of the code that actually makes you connect to a server. To the server's eyes, you are simply connection to it. The only thing it will know is that you came from a riftway, and it will teleport you to the closest one. I repeat, it CANNOT bypass server security and it won't do that.
 
-- The list of items that make up the "password" for a riftway, are NOT ENCRYPTED, simply beacuse they are not meant to. They are not a proper security feature, so do not treat it as it was, use a whitelist instead! (If there is enough request, I can try to look into it and try to encrypt it). 
+- **The list of items that make up the "password" for a riftway, are NOT ENCRYPTED, simply beacuse they are not meant to.** They are not a proper security feature, so do not treat it as it was, use a whitelist instead! (If there is enough request, I can try to look into it and try to encrypt it). 
 That said, it is only stored inside a data file on the server, so provided your server is secure, unless someones is using a plugin/mod/prograrm to catch the packets sent between a server and a client, no one else will know the password. (I doubt anyone will go to this lenghts only to steal a "toy password" for joining a server through a riftway)
 
-- To make the client know if the server it is trying to join has riftway or not a socket-sever will be started, default port is 27999. Everytime a client connects a new thread is created to exchange information between the two, it should close right after the server respond, but bugs exist so watch out and, in the event something goes wrong please report it! (Also, restart the server in that case)
+- To make the client know if the server it is trying to join has riftway or not **a socket-sever will be started, default port is 27999**. Everytime a client connects a new thread is created to exchange information between the two, it should close right after the server respond, but bugs exist so watch out and, in the event something goes wrong please report it! (Also, restart the server in that case)
 
-- Also, small detail: to make the bundle-combination lock thingy I had to move the right-click action of dropping all the contents of the bundle to a shift-right-click. (I think it's better this way, but I'll probably add an option to disable this later on)
+- Also, small detail: to make the bundle-combination lock thingy **I had to move the right-click action of dropping all the contents of the bundle to a shift-right-click.** (I think it's better this way, but I'll probably add an option to disable this later on)
 
 ## Extra setup required on a server
 To make your sever visible to client connecting to it using riftways you will need to open a port for communication (a socket-server to exchange info between client and server, is started whenever you load the mod on a server). By default it is 27999 (TCP) but you can change it in the data file (located in the /config/ folder)

@@ -7,13 +7,18 @@ This mod doesn't really add something you *can't* already do, but makes it a lot
 
 It's kind of is the fundation of a REAL Minecraft "multiverse", or at least a cool way to connect worlds toghether without breaking the flow by going the main menu and stuff.
 
+## Official Video
+It's a mixture between a tutorial and story telling, so if you want more details read through this page, otherwise if you'd like a more immersive approach, feel free to take a look at this:
+
+/link to the video/
+
 ## How to play
 ### ![seedlight_seed - Copia](https://user-images.githubusercontent.com/29462910/210248693-658e9121-e2a5-435f-b9a4-1e33ecf5ac1b.png) Creating the Riftway portal ![seedlight_seed - Copia](https://user-images.githubusercontent.com/29462910/210248693-658e9121-e2a5-435f-b9a4-1e33ecf5ac1b.png)
 
 More like *cultivating* it eheh!
 The first thing to is try to obtain a SeedLight Seed!
 
-![seedlight_seed](https://user-images.githubusercontent.com/29462910/210248524-9169f7ec-12cb-4afc-b22c-6a8a26156b1e.png)
+![seedlight_seed](https://user-images.githubusercontent.com/29462910/210250763-d23373d4-375b-4e80-8346-622d6596c7aa.png)
 
 This is an ancient and probably forgotten seed that can only be found in a few places, legends tell that it was key to some ancient culture's successes. It can be found in these loot chests: 
   - End City, 1/2 with 20% chance
@@ -45,7 +50,8 @@ You know need to go back and search for some Inter-Riftways Leves. And yes, they
 Or you could destroy some leaves from the new born tree, but they look so pretty, why would you do that? Oh fine, at least do it with fortune tho:
   - SeedLight Rift Flowering Leaves: 13-70% chance of getting one. Bonus: 0-40% chance of getting a SeedLight seed. (firt no fortune, last fortune III)
   - SeedLight Rift Leaves: 15-72% chance of getting one. (firt no fortune, last fortune III)
-![inter_riftways_leaf](https://user-images.githubusercontent.com/29462910/210248434-1a9a6704-d3ad-4cc6-938d-2ebbe7cb719d.png)
+
+![inter_riftways_leaf](https://user-images.githubusercontent.com/29462910/210250807-98c951b3-7842-4200-9051-55bcfe158721.png)
 
 Now we will prepare some tea... well no we will smack the name of the place you want to vist through the riftway using an anvil!
 Put the newly acquired leaf into an anvil and rename it to the IP of the server you want to connect to, such as "mc.example.com" or "hypixel.net" (hypixel won't actually work, as far as I know they don't have a riftway opened yet), or if you want to connect to a local wolrd (aka a singleplayer wolrd) write "local" if you want to go to your most-recently-played world or "local:nameoftheworld" to go to a sepcific one, such as "local:testworld".

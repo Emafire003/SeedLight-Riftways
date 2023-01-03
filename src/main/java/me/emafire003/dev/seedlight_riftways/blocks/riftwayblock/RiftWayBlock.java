@@ -217,7 +217,6 @@ public class RiftWayBlock extends BlockWithEntity {
                 if(!sworld.getServer().isDedicated()){
                     SeedLightRiftways.setIsRiftwayActiveInWorld(false, ((INamedSeverWorld)sworld).getLevelName());
                 }
-                SeedLightRiftways.removeRiftwayLocation(false, pos, world);
                 //TODO lang translatable
                 player.sendMessage(Text.literal(SeedLightRiftways.PREFIX+" §bThe riftway has been deactivated!"));
                 SeedLightRiftways.updateConfig();

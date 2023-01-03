@@ -147,7 +147,7 @@ public class SeedLightRiftways implements ModInitializer {
     public static void addRiftwayLocation(boolean isDirect, BlockPos pos, World world){
         RIFTWAYS_LOCATIONS.put(pos.asLong(), isDirect);
         addRiftwayLocationLocal(isDirect, pos, world);
-        LOGGER.info("Adding riftway location, " + RIFTWAYS_LOCATIONS.toString());
+        LOGGER.debug("Adding riftway location, " + RIFTWAYS_LOCATIONS.toString());
         updateConfig();
     }
 
@@ -155,7 +155,7 @@ public class SeedLightRiftways implements ModInitializer {
     public static void addRiftwayLocationLocal(boolean isDirect, BlockPos pos, World world){
         try{
             if(!world.isClient){ //Ensures it runs on the server
-                LOGGER.info("Nope, world isn't client (which is ok, server thread yknow), is the server dedicated? : " + ((ServerWorld) world).getServer().isDedicated());
+                LOGGER.debug(" Registering position on config, BlockPos: " + pos + " asLong: " + pos.asLong());
                 //If it's not dedicated it's integrated so we are in in singleplayer
                 if(!((ServerWorld) world).getServer().isDedicated()){
                     ((ServerWorld) world).getPersistentStateManager()
@@ -170,17 +170,21 @@ public class SeedLightRiftways implements ModInitializer {
         }
     }
 
+
     public static void registerRiftwayPersistentData(){
         ServerWorldEvents.LOAD.register( (server, world) -> {
-            RiftwayDataPersistentState data = world.getPersistentStateManager().getOrCreate(RiftwayDataPersistentState::readNbt, RiftwayDataPersistentState::getInstance, "riftways_locations");
-            data.markDirty();
+            //No need to do it in multiplayer server yet
+            if(!server.isDedicated()){
+                RiftwayDataPersistentState data = world.getPersistentStateManager().getOrCreate(RiftwayDataPersistentState::readNbt, RiftwayDataPersistentState::getInstance, "riftways_locations");
+                data.markDirty();
+            }
         });
     }
 
     public static void removeRiftwayLocation(boolean isDirect, BlockPos pos, World world){
         RIFTWAYS_LOCATIONS.remove(pos.asLong(), isDirect);
         removeRiftwayLocationLocal(isDirect, pos, world);
-        LOGGER.info("Removing Riftway Location at " + pos);
+        LOGGER.debug("Removing Riftway Location at " + pos);
         ConfigDataSaver.CONFIG_INSTANCE.save();
     }
 
@@ -212,7 +216,7 @@ public class SeedLightRiftways implements ModInitializer {
         try{
             ServerPlayNetworking.send(player, UpdateRiftwayActivenessS2C.ID, new UpdateRiftwayActivenessS2C(IS_RIFTWAY_ACTIVE));
             ServerPlayNetworking.send(player, UpdateRiftwayIpS2C.ID, new UpdateRiftwayIpS2C(SAVED_SERVER_IP));
-            ServerPlayNetworking.send(player, UpdateRiftwayPasswordS2C.ID, new UpdateRiftwayPasswordS2C(SERVER_RIFTWAY_ITEMS_PASSWORD.toString()));
+            //ServerPlayNetworking.send(player, UpdateRiftwayPasswordS2C.ID, new UpdateRiftwayPasswordS2C(SERVER_RIFTWAY_ITEMS_PASSWORD.toString()));
         }catch(Exception e){
             LOGGER.error("FAILED to send data packets to the client!");
             e.printStackTrace();
@@ -238,8 +242,9 @@ public class SeedLightRiftways implements ModInitializer {
             if(!world.getServer().isDedicated()){ //If not dedicated it's integrated so singleplayer
                 RiftwayDataPersistentState locations_data = ((ServerWorld) world).getPersistentStateManager().getOrCreate(RiftwayDataPersistentState::readNbt, RiftwayDataPersistentState::getInstance, "riftways_locations");
                 entrySet = locations_data.riftway_local_pos.entrySet();
-                }
+            }
         }
+        //LOGGER.info("== Entry set chosen: " + entrySet.stream().toList().toString());
         for(Map.Entry<Long, Boolean> entry : entrySet){
             boolean is_direct = entry.getValue();
             long pos_long = entry.getKey();
@@ -252,10 +257,12 @@ public class SeedLightRiftways implements ModInitializer {
                 }
                 double distance_from_origin = pos.getSquaredDistance(origin_rift_pos.getX(), origin_rift_pos.getY(), origin_rift_pos.getZ());
                 double distance_from_teleportto = pos.getSquaredDistance(teleport_to.getX(), teleport_to.getY(), teleport_to.getZ());
-                LOGGER.debug("Current pos: " + pos);
+                /*LOGGER.info("Current pos: " + pos);
+                LOGGER.info("Distance from origin: " + distance_from_origin);
+                LOGGER.info("Distance from teleport to: " + distance_from_teleportto);*/
                 if(distance_from_origin < distance_from_teleportto){
                     teleport_to = pos;
-                    LOGGER.debug("Switching to new pos: " + teleport_to);
+                    //LOGGER.info("Switching to new pos: " + teleport_to);
                 }
             }
         }

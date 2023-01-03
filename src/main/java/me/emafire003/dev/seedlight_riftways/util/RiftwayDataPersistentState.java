@@ -1,13 +1,12 @@
 package me.emafire003.dev.seedlight_riftways.util;
 
+import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.PersistentState;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static me.emafire003.dev.seedlight_riftways.SeedLightRiftways.LOGGER;
 
 public class RiftwayDataPersistentState extends PersistentState {
 
@@ -24,7 +23,7 @@ public class RiftwayDataPersistentState extends PersistentState {
     }
 
     public void addLocalRiftwayLocation(boolean isDirect, BlockPos pos){
-        LOGGER.info("=========Adding a new riftloc to the dat file, which corresponds to: " + pos.toString() + " long: " + pos.asLong());
+        SeedLightRiftways.LOGGER.debug(" Registering position on persistent state as BlockPos: " + pos + " asLong: " + pos.asLong());
         riftway_local_pos.put(pos.asLong(), isDirect);
     }
 
@@ -36,13 +35,10 @@ public class RiftwayDataPersistentState extends PersistentState {
     public NbtCompound writeNbt(NbtCompound nbt) {
         NbtCompound locations = new NbtCompound();
         locations.putLongArray("rift_locations", riftway_local_pos.keySet().stream().toList());
-        LOGGER.info("==========Saving the riftway location to a file");
-        LOGGER.info("????????????? The stuff to save: " + riftway_local_pos.toString());
+        //SeedLightRiftways.LOGGER.debug("Positions to be saved: " + riftway_local_pos.keySet().stream().toList().toString());
         for(Map.Entry entry : this.riftway_local_pos.entrySet()){
             locations.putBoolean("rift_" + entry.getKey().toString(), (Boolean) entry.getValue());
         }
-        LOGGER.info("The Saved NBT compound: " + locations);
-        LOGGER.info("The locations array: " + locations.getLongArray("rift_location").toString());
         nbt.put("RiftwayLocations", locations);
         return nbt;
     }
@@ -50,11 +46,10 @@ public class RiftwayDataPersistentState extends PersistentState {
     public static RiftwayDataPersistentState readNbt(NbtCompound nbt) {
         NbtCompound locations = nbt.getCompound("RiftwayLocations");
         HashMap<Long, Boolean> rift_locs = new HashMap<>();
-        LOGGER.info("=============0 Reading NBT");
         for(Long pos : locations.getLongArray("rift_locations")){
+            //SeedLightRiftways.LOGGER.info("èèèèèèèèèèèèèèè Reading from dat file, BlockPos: " + BlockPos.fromLong(pos) + " asLong: " + pos);
             rift_locs.put(pos, locations.getBoolean(pos.toString()));
         }
-        LOGGER.info("The riftlocs: " + rift_locs.toString());
         return new RiftwayDataPersistentState(rift_locs);
     }
 }

@@ -66,7 +66,7 @@ public class SeedLightPlantBlock extends CropBlock {
             }
             if (i < this.getMaxAge()) {
                 float f = getAvailableMoisture(this, world, pos);
-                if (random.nextInt((int)(50.0F / f) + 1) == 0) {
+                if (random.nextInt((int)(35.0F / f) + 1) == 0) {
                     world.setBlockState(pos, this.withAge(i + 1), Block.NOTIFY_LISTENERS);
                     this.setWaterLevel(this.getWaterLevel() - random.nextBetween(1, 2));
                 }

@@ -37,7 +37,7 @@ public class ServerPacketsListener {
                     //player.sendMessage(Text.literal("DEUBUG: Is Coming from direct portal: " + coming_from_direct));
                     //player.sendMessage(Text.literal("DEUBUG: Origin server: " + origin_server));
                     BlockPos teleport_to = SeedLightRiftways.getClosestRiftway(origin_rift_pos, player.getWorld());
-                    LOGGER.info("Position chosen: " + teleport_to);
+                    LOGGER.debug("Position chosen: " + teleport_to);
                     RiftWayBlockEntity.playExitRiftwaySoundEffect(player.getWorld(), teleport_to);
                     RiftWayBlockEntity.spawnExitRiftwayParticles(player.getWorld(), Vec3d.ofCenter(teleport_to.add(0,1,0)));
                     player.teleport(teleport_to.getX()+0.5, teleport_to.getY(), teleport_to.getZ()+0.5);

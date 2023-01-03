@@ -39,86 +39,103 @@ public class RiftWayBlockEntity extends EndPortalBlockEntity {
 
     //I used directly MinecraftClient.getInstance().player since it gave weird errors if I tried using a variable
     public static void clientTick(World world, BlockPos pos, BlockState state, RiftWayBlockEntity blockEntity) {
-        List<PlayerEntity> list = world.getEntitiesByClass(PlayerEntity.class, new Box(pos), (entity1 -> true));
-        if (!list.isEmpty() && list.contains(MinecraftClient.getInstance().player)) {
-            if(SeedLightRiftwaysClient.IS_RIFTWAY_ACTIVE){
-                if(MinecraftClient.getInstance().player.getStackInHand(Hand.MAIN_HAND).isOf(Items.BUNDLE)){
-                    setPassFromBundle(MinecraftClient.getInstance().player.getStackInHand(Hand.MAIN_HAND));
-                }else if(MinecraftClient.getInstance().player.getStackInHand(Hand.OFF_HAND).isOf(Items.BUNDLE)){
-                    setPassFromBundle(MinecraftClient.getInstance().player.getStackInHand(Hand.OFF_HAND));
-                }
-                if(!SeedLightRiftwaysClient.connection_initialised && !players_on_cooldown.containsKey(MinecraftClient.getInstance().player.getUuid())){
-                    SeedLightRiftwaysClient.setDepartureBlockpos(pos);
-
-                    //TODO config the delay between teleports? Currently it's 10 seconds
-                    players_on_cooldown.put(MinecraftClient.getInstance().player.getUuid(), RIFTWAY_COOLDOWN);
-                    SeedLightRiftwaysClient.startConnectionToServer();
-                    playEnterRiftwaySoundEffect(world, pos);
-                }
-
-
-            }else{
-                for(PlayerEntity player : list){
-                    if(player.isSpectator()){
-                        continue;
+        try {
+            List<PlayerEntity> list = world.getEntitiesByClass(PlayerEntity.class, new Box(pos), (entity1 -> true));
+            if (!list.isEmpty() && list.contains(MinecraftClient.getInstance().player)) {
+                if(SeedLightRiftwaysClient.IS_RIFTWAY_ACTIVE){
+                    if(MinecraftClient.getInstance().player.getStackInHand(Hand.MAIN_HAND).isOf(Items.BUNDLE)){
+                        setPassFromBundle(MinecraftClient.getInstance().player.getStackInHand(Hand.MAIN_HAND));
+                    }else if(MinecraftClient.getInstance().player.getStackInHand(Hand.OFF_HAND).isOf(Items.BUNDLE)){
+                        setPassFromBundle(MinecraftClient.getInstance().player.getStackInHand(Hand.OFF_HAND));
                     }
-                    Vec3d v = Vec3d.ofCenter(pos).add(.5, .5, .5).subtract(player.getPos());
-                    v = v.multiply(1, 0.00001, 1).multiply(-1.5);
-                    v = v.normalize().multiply(.5);
-                    //Vec3d backwards_vel = player.getVelocity().multiply(-1);
-                    //player.setVelocity(backwards_vel.x, backwards_vel.y, backwards_vel.z);
-                    player.setVelocityClient(v.x, v.y, v.z);
-                    player.setVelocity(v);
+                    if(!SeedLightRiftwaysClient.connection_initialised && !players_on_cooldown.containsKey(MinecraftClient.getInstance().player.getUuid())){
+                        SeedLightRiftwaysClient.setDepartureBlockpos(pos);
+
+                        //TODO config the delay between teleports? Currently it's 10 seconds
+                        players_on_cooldown.put(MinecraftClient.getInstance().player.getUuid(), RIFTWAY_COOLDOWN);
+                        SeedLightRiftwaysClient.startConnectionToServer();
+                        playEnterRiftwaySoundEffect(world, pos);
+                    }
+
+
+                }else{
+                    for(PlayerEntity player : list){
+                        if(player.isSpectator()){
+                            continue;
+                        }
+                        Vec3d v = Vec3d.ofCenter(pos).add(.5, .5, .5).subtract(player.getPos());
+                        v = v.multiply(1, 0.00001, 1).multiply(-1.5);
+                        v = v.normalize().multiply(.5);
+                        //Vec3d backwards_vel = player.getVelocity().multiply(-1);
+                        //player.setVelocity(backwards_vel.x, backwards_vel.y, backwards_vel.z);
+                        player.setVelocityClient(v.x, v.y, v.z);
+                        player.setVelocity(v);
+                    }
+                }
+
+            }
+            //This ticks the cooldown and lowers it each tick by one (client side)
+            HashMap<UUID, Integer> copy = players_on_cooldown;
+            Set<Map.Entry<UUID, Integer>> set = players_on_cooldown.entrySet();
+            for(Map.Entry<UUID, Integer> entry : set){
+                if(entry.getValue()-1 == 0){
+                    copy.remove(entry.getKey());
+                }else{
+                    copy.put(entry.getKey(), entry.getValue()-1);
                 }
             }
-
-        }
-        //This ticks the cooldown and lowers it each tick by one (client side)
-        for(Map.Entry<UUID, Integer> entry : players_on_cooldown.entrySet()){
-            if(entry.getValue()-1 == 0){
-                players_on_cooldown.remove(entry.getKey());
-            }else{
-                players_on_cooldown.put(entry.getKey(), entry.getValue()-1);
-            }
+            players_on_cooldown = copy;
+        }catch (Exception e){
+            LOGGER.warn("Something went wrong, but everything should be working correctly regardless");
+            e.printStackTrace();
         }
 
     }
 
     public static void serverTick(World world, BlockPos pos, BlockState state, RiftWayBlockEntity blockEntity) {
-        List<PlayerEntity> list = world.getEntitiesByClass(PlayerEntity.class, new Box(pos), (entity1 -> true));
-        if (!list.isEmpty()) {
-            if(!SeedLightRiftways.IS_RIFTWAY_ACTIVE){
-                for(PlayerEntity player : list){
-                    if(player.isSpectator()){
-                        continue;
+        try{
+            List<PlayerEntity> list = world.getEntitiesByClass(PlayerEntity.class, new Box(pos), (entity1 -> true));
+            if (!list.isEmpty()) {
+                if(!SeedLightRiftways.IS_RIFTWAY_ACTIVE){
+                    for(PlayerEntity player : list){
+                        if(player.isSpectator()){
+                            continue;
+                        }
+                        Vec3d v = Vec3d.ofCenter(pos).add(.5, .5, .5).subtract(player.getPos());
+                        v = v.multiply(-1, 0.00001, -1).multiply(1.5);
+                        v = v.normalize().multiply(.5);
+                        //Vec3d backwards_vel = player.getVelocity().multiply(-1);
+                        //player.setVelocity(backwards_vel.x, backwards_vel.y, backwards_vel.z);
+                        player.setVelocityClient(v.x, v.y, v.z);
+                        player.setVelocity(v);
                     }
-                    Vec3d v = Vec3d.ofCenter(pos).add(.5, .5, .5).subtract(player.getPos());
-                    v = v.multiply(-1, 0.00001, -1).multiply(1.5);
-                    v = v.normalize().multiply(.5);
-                    //Vec3d backwards_vel = player.getVelocity().multiply(-1);
-                    //player.setVelocity(backwards_vel.x, backwards_vel.y, backwards_vel.z);
-                    player.setVelocityClient(v.x, v.y, v.z);
-                    player.setVelocity(v);
-                }
-            }else{
-                for(PlayerEntity player : list){
-                    if(player != null && !players_on_cooldown.containsKey(player.getUuid())){
-                        //TODO config the delay between teleports? Currently it's 10 seconds
-                        players_on_cooldown.put(player.getUuid(), RIFTWAY_COOLDOWN);
-                        spawnEnterRiftwayParticles(world, Vec3d.ofCenter(pos).add(0,1,0));
-                        playEnterRiftwaySoundEffect(world, pos);
+                }else{
+                    for(PlayerEntity player : list){
+                        if(player != null && !players_on_cooldown.containsKey(player.getUuid())){
+                            //TODO config the delay between teleports? Currently it's 10 seconds
+                            players_on_cooldown.put(player.getUuid(), RIFTWAY_COOLDOWN);
+                            spawnEnterRiftwayParticles(world, Vec3d.ofCenter(pos).add(0,1,0));
+                            playEnterRiftwaySoundEffect(world, pos);
+                        }
                     }
                 }
             }
-        }
 
-        //This ticks the cooldown and lowers it each tick by one
-        for(Map.Entry<UUID, Integer> entry : players_on_cooldown.entrySet()){
-            if(entry.getValue()-1 == 0){
-                players_on_cooldown.remove(entry.getKey());
-            }else{
-                players_on_cooldown.put(entry.getKey(), entry.getValue()-1);
+            //This ticks the cooldown and lowers it each tick by one
+            //And "copy" is to prevent concurrent modification exception :/
+            HashMap<UUID, Integer> copy = players_on_cooldown;
+            Set<Map.Entry<UUID, Integer>> set = players_on_cooldown.entrySet();
+            for(Map.Entry<UUID, Integer> entry : set){
+                if(entry.getValue()-1 == 0){
+                    copy.remove(entry.getKey());
+                }else{
+                    copy.put(entry.getKey(), entry.getValue()-1);
+                }
             }
+            players_on_cooldown = copy;
+        }catch (Exception e){
+            LOGGER.warn("Something went wrong, but everything should be working correctly regardless");
+            e.printStackTrace();
         }
 
     }
@@ -174,14 +191,12 @@ public class RiftWayBlockEntity extends EndPortalBlockEntity {
     }
 
     public static void playEnterRiftwaySoundEffect(World world, BlockPos pos){
-        LOGGER.info("Trying to play enter riftway sound on world...");
         world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.BLOCKS, 1f, 0.2f, false);
         world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ALLAY_AMBIENT_WITH_ITEM, SoundCategory.BLOCKS, 1f, 0.25f, false);
         world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ALLAY_AMBIENT_WITH_ITEM, SoundCategory.BLOCKS, 1f, 0.25f, false);
         world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.BLOCKS, 1f, 1.7f, false);
         world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_PORTAL_TRIGGER, SoundCategory.BLOCKS, 1f, 0.1f, false);
         world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_RESPAWN_ANCHOR_AMBIENT, SoundCategory.BLOCKS, 1f, 0.5f, false);
-        LOGGER.info("Played");
     }
 
     public static void spawnEnterRiftwayParticles(World world, Vec3d pos){

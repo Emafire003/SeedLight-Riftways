@@ -63,7 +63,6 @@ public class RiftwayListener implements Runnable{
                 // socket object to receive incoming client requests
                 s = ss.accept();
 
-                //TODO move to debug
                 LOGGER.info("A new riftway-client just connected to the listener: " + s);
 
                 // obtaining input and out streams
@@ -120,12 +119,10 @@ class ClientHandler extends Thread
                 // receive the answer from client
                 received = dis.readUTF();
 
-                //TODO set this to logger.debug
                 LOGGER.debug("Message received: " + received);
 
                 if(received.equals("exit"))
                 {
-                    //TODO set this to logger.debug
                     LOGGER.debug("Client " + this.s + " sends exit...");
                     LOGGER.info("Info sent, Closing this connection.");
                     this.s.close();
@@ -136,19 +133,16 @@ class ClientHandler extends Thread
                 if(!SeedLightRiftways.IS_RIFTWAY_ACTIVE){
                     toreturn = "no_riftways";
                     dos.writeUTF(toreturn);
-                    //TODO set this to logger.debug
-                    LOGGER.info("Sending 'no_riftways' to client");
+                    LOGGER.debug("Sending 'no_riftways' to client");
                 }else if(!SeedLightRiftways.REQUIRES_PASSWORD || received.equalsIgnoreCase(SeedLightRiftways.SERVER_RIFTWAY_ITEMS_PASSWORD.toString()))
                 {
                     toreturn = "can_connect";
                     dos.writeUTF(toreturn);
-                    //TODO set this to logger.debug
-                    LOGGER.info("Sending 'can_connect' to client");
+                    LOGGER.debug("Sending 'can_connect' to client");
                 }else {
                     toreturn = "wrong_password";
                     dos.writeUTF(toreturn);
-                    //TODO set this to logger.debug
-                    LOGGER.info("Sending 'wrong_password' to client");
+                    LOGGER.debug("Sending 'wrong_password' to client");
                 }
             }//end of the while
 

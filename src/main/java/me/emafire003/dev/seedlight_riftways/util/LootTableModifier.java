@@ -31,7 +31,6 @@ public class LootTableModifier {
 
 
     public static void modifyLootTables() {
-        LOGGER.info("Modifying the loot tables to generate the mod's items...");
         float base_chance = 0.20f;
 
         LootTableEvents.MODIFY.register(((resourceManager, manager, id, supplier, setter) -> {

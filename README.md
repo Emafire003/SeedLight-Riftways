@@ -2,6 +2,8 @@
 
 With this mod you will be able to seamlessly travel from world to world, from your own front lawn in that single player world you started ages ago to your friend's server, without going through the menus and stuff!
 
+![Uploading ezgif-1-187c48ea95.gif…]()
+
 ## About
 This mod doesn't really add something you *can't* already do, but makes it a lot prettier. By cultivating a SeedLight plant, you will be able to open a Riftway portal, that can take you directly to a server that also has at least one Riftway active on it. And from there you could go back to your own world if you want, or start and adventure between so many other worlds, like you've seen in Minecraft Storymode, Alan Becker's animations, Hermticraft x Empires etc! (They didn't actually use this mod. Or maybe they did if they had a time machine, I dunno)
 
@@ -31,7 +33,8 @@ Once obtained make sure to plant it in an open space, possibly not underground, 
 It's a very care-requiring plant, it grows quite slowly compared to most other plants and you will need to splash it with some throwable water bottles ever so often.
 Each time it grows one stage it has a chance of consuming 1 or 2 units of water. It holds 10 at most. Every bottle splashed adds between 0 and 3 units.
 
-![ezgif-4-48b31e3b21](https://user-images.githubusercontent.com/29462910/210249003-41cb6fa1-67de-4a4e-ae41-2e38fef19d58.gif)
+![growgif](https://user-images.githubusercontent.com/29462910/210381822-9cfee54c-46a4-4429-be7b-b1e0b7a10afd.gif)
+
 
  Oh and make sure not to destroy it, since it's quite delicate and without the Fortune III enchantment you aren't guarantee the seed back! (The base chance is 33%, it grows every level)
  

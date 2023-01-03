@@ -13,7 +13,7 @@
     "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
 
-  "license": "ARR",
+  "license": "GNU LGPL3",
   "icon": "assets/seedlight_riftways/icon.png",
 
   "environment": "*",

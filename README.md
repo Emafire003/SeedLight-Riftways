@@ -1,11 +1,13 @@
 # SeedLight Riftways
 
-With this mod you will be able to seamlessly travel from world to world, from your own front lawn in that single player world you started ages ago to you're friend's server, without going through the menus and stuff!
+With this mod you will be able to seamlessly travel from world to world, from your own front lawn in that single player world you started ages ago to your friend's server, without going through the menus and stuff!
 
 ## About
-This mod doesn't really add something you *can't* already do, but makes it a lot prettier. By cultivating a SeedLight plant, you will be able to open a Riftway portal, that can take you directly to a server that also has at least one Riftway active on it. And from there you could go back to your own world if you want, or start and adventure between so many other worlds, like you've seen in Minecraft Storymode, Alan Becker's animations, Hermticraft x Empires etc! (They didn't actually use this mod. Or maybe they did if they had a time machine)
+This mod doesn't really add something you *can't* already do, but makes it a lot prettier. By cultivating a SeedLight plant, you will be able to open a Riftway portal, that can take you directly to a server that also has at least one Riftway active on it. And from there you could go back to your own world if you want, or start and adventure between so many other worlds, like you've seen in Minecraft Storymode, Alan Becker's animations, Hermticraft x Empires etc! (They didn't actually use this mod. Or maybe they did if they had a time machine, I dunno)
 
-It's kind of is the fundation of a REAL Minecraft "multiverse", or at least a cool way to connect worlds toghether without breaking the flow by going the main menu and stuff.
+It's kind of is the fundations of a "real" Minecraft "multiverse"/"gigaverse", or at least a cool way to connect worlds toghether without breaking the immersion by going the main menu and stuff. Scroll down below to see how to begin and how it works! (keep in mind it's in alpha now!)
+
+[![bisecthosting](https://www.bisecthosting.com/partners/custom-banners/e9c85d2a-cafa-4e2f-98bf-4f62bd9e951c.png)](https://www.bisecthosting.com/LightDev)
 
 ## Official Video
 It's a mixture between a tutorial and story telling, so if you want more details read through this page, otherwise if you'd like a more immersive approach, feel free to take a look at this:
@@ -127,4 +129,11 @@ To make your sever visible to client connecting to it using riftways you will ne
 
 ## License
 
-This template is available under ARR for the time being!
+This template is available under GNU LGLP3.
+
+And yes, modpack authors feel free to include this in your modpacks as long as you credit me.
+
+## Support me
+I'd appreciate hugs, but you can also:
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/S6S88307C)
+(or scroll up the page a bit and click on the Biscect Hostin thing, you can get a discount on server for yourself&friends supporting me while you're at it!)

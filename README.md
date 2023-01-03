@@ -2,7 +2,7 @@
 
 With this mod you will be able to seamlessly travel from world to world, from your own front lawn in that single player world you started ages ago to your friend's server, without going through the menus and stuff!
 
-![Uploading ezgif-1-187c48ea95.gif…]()
+![ezgif-1-187c48ea95](https://user-images.githubusercontent.com/29462910/210382177-79503aca-4c4e-463f-8232-1086f4d07f2b.gif)
 
 ## About
 This mod doesn't really add something you *can't* already do, but makes it a lot prettier. By cultivating a SeedLight plant, you will be able to open a Riftway portal, that can take you directly to a server that also has at least one Riftway active on it. And from there you could go back to your own world if you want, or start and adventure between so many other worlds, like you've seen in Minecraft Storymode, Alan Becker's animations, Hermticraft x Empires etc! (They didn't actually use this mod. Or maybe they did if they had a time machine, I dunno)

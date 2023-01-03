@@ -7,11 +7,19 @@ This mod doesn't really add something you *can't* already do, but makes it a lot
 
 It's kind of is the fundation of a REAL Minecraft "multiverse", or at least a cool way to connect worlds toghether without breaking the flow by going the main menu and stuff.
 
+## Official Video
+It's a mixture between a tutorial and story telling, so if you want more details read through this page, otherwise if you'd like a more immersive approach, feel free to take a look at this:
+
+/link to the video/
+
 ## How to play
-### Creating the Riftway portal
+### ![seedlight_seed - Copia](https://user-images.githubusercontent.com/29462910/210248693-658e9121-e2a5-435f-b9a4-1e33ecf5ac1b.png) Creating the Riftway portal ![seedlight_seed - Copia](https://user-images.githubusercontent.com/29462910/210248693-658e9121-e2a5-435f-b9a4-1e33ecf5ac1b.png)
+
 More like *cultivating* it eheh!
 The first thing to is try to obtain a SeedLight Seed!
-/image goes here/
+
+![seedlight_seed](https://user-images.githubusercontent.com/29462910/210250763-d23373d4-375b-4e80-8346-622d6596c7aa.png)
+
 This is an ancient and probably forgotten seed that can only be found in a few places, legends tell that it was key to some ancient culture's successes. It can be found in these loot chests: 
   - End City, 1/2 with 20% chance
   - Ancient City, 1 with 25% chance
@@ -20,15 +28,19 @@ This is an ancient and probably forgotten seed that can only be found in a few p
 Once obtained make sure to plant it in an open space, possibly not underground, and not in the dark. After, all it's called SeedLight for a reason. 
 It's a very care-requiring plant, it grows quite slowly compared to most other plants and you will need to splash it with some throwable water bottles ever so often.
 Each time it grows one stage it has a chance of consuming 1 or 2 units of water. It holds 10 at most. Every bottle splashed adds between 0 and 3 units.
-/gif of plant growing/
 
- Oh and make sure not to destry it, since it's quite delicate and without the Fortune III enchantment you aren't guarantee the seed back! (The base chance is 33%, it grows every level)
+![ezgif-4-48b31e3b21](https://user-images.githubusercontent.com/29462910/210249003-41cb6fa1-67de-4a4e-ae41-2e38fef19d58.gif)
+
+ Oh and make sure not to destroy it, since it's quite delicate and without the Fortune III enchantment you aren't guarantee the seed back! (The base chance is 33%, it grows every level)
+ 
+![2023-01-02_15 57 22](https://user-images.githubusercontent.com/29462910/210248069-c809dc3c-5ed6-4110-8114-72f3b03ce5b3.png)
 
 When it finally blooms a lot of energy is contained in it, so it exponentially grows into a large tree, and inside of it the long-awateid Riftway!
-/riftway tree here/
+
 But it doesn't really lead anywhere does it? An inactive riftway will bounce you back away from it if you try to enter it!
 
-### Setting a destination
+### ![inter_riftways_leaf item](https://user-images.githubusercontent.com/29462910/210248731-4b51abad-aad3-4128-8f57-b2a38c2b4e4b.png) Setting a destination ![inter_riftways_leaf item](https://user-images.githubusercontent.com/29462910/210248731-4b51abad-aad3-4128-8f57-b2a38c2b4e4b.png)
+
 
 You know need to go back and search for some Inter-Riftways Leves. And yes, they can be found where the seeds were stashed:
   - End City, 1/2 with 30% chance
@@ -39,6 +51,8 @@ Or you could destroy some leaves from the new born tree, but they look so pretty
   - SeedLight Rift Flowering Leaves: 13-70% chance of getting one. Bonus: 0-40% chance of getting a SeedLight seed. (firt no fortune, last fortune III)
   - SeedLight Rift Leaves: 15-72% chance of getting one. (firt no fortune, last fortune III)
 
+![inter_riftways_leaf](https://user-images.githubusercontent.com/29462910/210250807-98c951b3-7842-4200-9051-55bcfe158721.png)
+
 Now we will prepare some tea... well no we will smack the name of the place you want to vist through the riftway using an anvil!
 Put the newly acquired leaf into an anvil and rename it to the IP of the server you want to connect to, such as "mc.example.com" or "hypixel.net" (hypixel won't actually work, as far as I know they don't have a riftway opened yet), or if you want to connect to a local wolrd (aka a singleplayer wolrd) write "local" if you want to go to your most-recently-played world or "local:nameoftheworld" to go to a sepcific one, such as "local:testworld".
 
@@ -46,20 +60,27 @@ Once you have done that, use the leaf on the Riftway, and it will turn blue sing
 
 You can now enter the riftway and travel to never-before-seen places! Or your friend's backgarden. 
 
+![2023-01-02_16 08 39](https://user-images.githubusercontent.com/29462910/210249837-a6ea8e22-86f8-4b22-802a-e64a8f504cbe.png)
+
 ### Interactions with the Riftway
 As seen before, you can activate a Riftway by simply setting a destination. 
 To **deactivate** it you can right-click on it using a Fire Charge, and it will go back to being a red-inactive riftway.
+![2023-01-02_16 08 26](https://user-images.githubusercontent.com/29462910/210249419-abb04741-1bea-4218-bd48-6c4002b8faf7.png)
 
 You can also set a **combination** of items that is required to travel through your Riftway portal. To do this, fill a Bundle with the items that will make up your combination, and right-click on the riftway! Now everyone trying to get thorugh your riftway will need to add this before entering. (Warning: No encryption see the Disclaimer section down below). 
 
 To remove a combination, simply empty the bundle and click again.
 
+![2023-01-02_16 10 02](https://user-images.githubusercontent.com/29462910/210249757-0c684386-575c-4ebe-b4bb-500cea751c03.png)
+
 #### Connection to a riftway which is locked behind an item combination
-If you want to connect to riftway that requires an item combination/password you will need to 1) Know the exact item combination, so go ask for it 2) You will need to fill up a Bundle in the exact same way as the combination given to you. 3) Simply hold it in your hand when travelling through the Riftway.
+If you want to connect to riftway that requires an item combination/password you will need to:
+1) Know the exact item combination, so go ask for it 
+2) You will need to fill up a Bundle in the exact same way as the combination given to you. 
+3) Simply hold it in your hand when travelling through the Riftway.
 
 ##### How do I get a Bundle item?
-In survival you can't yet (blame Mojang), but there are some datapacks/mods that allow you to do so. Or if you want you can use the /give command to get it.
-
+In survival you can't yet (blame Mojang), but there are some datapacks/mods that allow you to do so. Or if you want you can use the /give @p minecraft:bundle command to get it.
 
 ### Extra info and also stuff
 If you are like a server admin or you would simply like to have a bigger portal, there is a block in the creative inverntory call "Riftway Block". Place it down as you like, you can create a portal as big as you like. As long as you place a riftway block that is no further away than 10 blocks from another one it still going to count as one. This is important because:
@@ -92,14 +113,14 @@ This mod is currently in ALPHA, meaning: It probably has bugs that will be fixed
 
 ## DISCLAIMER (Important, please read!)
 What this mod **CAN NOT** and **WILL NOT** DO:
-- It can't bypass server authenitcation plugins or whitelist or anything, it doesn't rewrite any of the code that actually makes you connect to a server. To the server's eyes, you are simply connection to it. The only thing it will know is that you came from a riftway, and it will teleport you to the closest one. I repeat, it CANNOT bypass server security and it won't do that.
+- **It can't bypass server authenitcation plugins or whitelist or anything**, it doesn't rewrite any of the code that actually makes you connect to a server. To the server's eyes, you are simply connection to it. The only thing it will know is that you came from a riftway, and it will teleport you to the closest one. I repeat, it CANNOT bypass server security and it won't do that.
 
-- The list of items that make up the "password" for a riftway, are NOT ENCRYPTED, simply beacuse they are not meant to. They are not a proper security feature, so do not treat it as it was, use a whitelist instead! (If there is enough request, I can try to look into it and try to encrypt it). 
+- **The list of items that make up the "password" for a riftway, are NOT ENCRYPTED, simply beacuse they are not meant to.** They are not a proper security feature, so do not treat it as it was, use a whitelist instead! (If there is enough request, I can try to look into it and try to encrypt it). 
 That said, it is only stored inside a data file on the server, so provided your server is secure, unless someones is using a plugin/mod/prograrm to catch the packets sent between a server and a client, no one else will know the password. (I doubt anyone will go to this lenghts only to steal a "toy password" for joining a server through a riftway)
 
-- To make the client know if the server it is trying to join has riftway or not a socket-sever will be started, default port is 27999. Everytime a client connects a new thread is created to exchange information between the two, it should close right after the server respond, but bugs exist so watch out and, in the event something goes wrong please report it! (Also, restart the server in that case)
+- To make the client know if the server it is trying to join has riftway or not **a socket-sever will be started, default port is 27999**. Everytime a client connects a new thread is created to exchange information between the two, it should close right after the server respond, but bugs exist so watch out and, in the event something goes wrong please report it! (Also, restart the server in that case)
 
-- Also, small detail: to make the bundle-combination lock thingy I had to move the right-click action of dropping all the contents of the bundle to a shift-right-click. (I think it's better this way, but I'll probably add an option to disable this later on)
+- Also, small detail: to make the bundle-combination lock thingy **I had to move the right-click action of dropping all the contents of the bundle to a shift-right-click.** (I think it's better this way, but I'll probably add an option to disable this later on)
 
 ## Extra setup required on a server
 To make your sever visible to client connecting to it using riftways you will need to open a port for communication (a socket-server to exchange info between client and server, is started whenever you load the mod on a server). By default it is 27999 (TCP) but you can change it in the data file (located in the /config/ folder)

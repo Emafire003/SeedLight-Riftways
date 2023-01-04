@@ -1,6 +1,5 @@
 package me.emafire003.dev.seedlight_riftways;
 
-import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
 import me.emafire003.dev.seedlight_riftways.blocks.SLRBlocks;
 import me.emafire003.dev.seedlight_riftways.blocks.riftwayblock.RiftWayBlockEntity;
 import me.emafire003.dev.seedlight_riftways.blocks.riftwayblock.RiftwayBlockEntityRenderer;
@@ -30,7 +29,6 @@ import net.minecraft.client.sound.SoundManager;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.level.storage.LevelStorage;
 import net.minecraft.world.level.storage.LevelSummary;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,7 +62,7 @@ public class SeedLightRiftwaysClient implements ClientModInitializer {
      */
     @Override
     public void onInitializeClient() {
-        ClientCommandRegistrationCallback.EVENT.register(SLRCommands::registerCommands);
+        //ClientCommandRegistrationCallback.EVENT.register(SLRCommands::registerCommands);
         BlockRenderLayerMap.INSTANCE.putBlock(SLRBlocks.RIFTWAY_BLOCK, SLRRenderLayers.getRiftway());
         BlockEntityRendererRegistry.register(SLRBlocks.RIFTWAY_BLOCKENTITY, RiftwayBlockEntityRenderer::new);
         BlockRenderLayerMap.INSTANCE.putBlock(SLRBlocks.SEEDLIGHT_PLANT, RenderLayer.getCutout());

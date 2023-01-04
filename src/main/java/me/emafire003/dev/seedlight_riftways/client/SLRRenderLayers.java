@@ -7,6 +7,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.block.entity.EndGatewayBlockEntityRenderer;
 import net.minecraft.client.render.block.entity.EndPortalBlockEntityRenderer;
 
 @Environment(EnvType.CLIENT)
@@ -27,8 +28,8 @@ public class SLRRenderLayers extends RenderLayer {
     }
 
     static {
-        RIFTWAY = RenderLayersOfInvoker.of("RIFTWAY", VertexFormats.POSITION, VertexFormat.DrawMode.QUADS, 256, false, false, MultiPhaseParameters.builder().shader(END_GATEWAY_SHADER).texture(Textures.create().add(EndPortalBlockEntityRenderer.SKY_TEXTURE, true, false).add(RiftwayBlockEntityRenderer.PORTAL_TEXTURE, true, false).build()).build(false));
-        RIFTWAY_INACTIVE = RenderLayersOfInvoker.of("RIFTWAY", VertexFormats.POSITION, VertexFormat.DrawMode.QUADS, 256, false, false, MultiPhaseParameters.builder().shader(END_GATEWAY_SHADER).texture(Textures.create().add(RiftwayBlockEntityRenderer.SKY_TEXTURE, false, false).add(RiftwayBlockEntityRenderer.PORTAL_TEXTURE_INACTIVE, false, false).build()).build(false));
+        RIFTWAY = RenderLayersOfInvoker.of("RIFTWAY", VertexFormats.POSITION, VertexFormat.DrawMode.QUADS, 256, false, false, MultiPhaseParameters.builder().program(END_GATEWAY_PROGRAM).texture(Textures.create().add(EndPortalBlockEntityRenderer.SKY_TEXTURE, true, false).add(RiftwayBlockEntityRenderer.PORTAL_TEXTURE, true, false).build()).build(false));
+        RIFTWAY_INACTIVE = RenderLayersOfInvoker.of("RIFTWAY", VertexFormats.POSITION, VertexFormat.DrawMode.QUADS, 256, false, false, MultiPhaseParameters.builder().program(END_GATEWAY_PROGRAM).texture(Textures.create().add(RiftwayBlockEntityRenderer.SKY_TEXTURE, false, false).add(RiftwayBlockEntityRenderer.PORTAL_TEXTURE_INACTIVE, false, false).build()).build(false));
 
     }
 }

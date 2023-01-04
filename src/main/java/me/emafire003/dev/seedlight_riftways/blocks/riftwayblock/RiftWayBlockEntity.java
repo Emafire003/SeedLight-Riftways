@@ -231,14 +231,14 @@ public class RiftWayBlockEntity extends EndPortalBlockEntity {
     public static void playTurnOffRiftway(World world, BlockPos pos){
         world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_AMETHYST_CLUSTER_PLACE, SoundCategory.BLOCKS, 1f, 1.5f, false);
         world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.3f, 0.3f, false);
-        world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE, SoundCategory.BLOCKS, 1f, 0.6f, false);
+        world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), SoundCategory.BLOCKS, 1f, 0.6f, false);
         world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, SoundCategory.BLOCKS, 1f, 0.1f, false);
     }
 
     public static void playTurnOffRiftway(PlayerEntity player){
         player.playSound(SoundEvents.BLOCK_AMETHYST_CLUSTER_PLACE, 1, 1.5f);
         player.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 0.3f, 0.3f);
-        player.playSound(SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE, 1, 0.6f);
+        player.playSound(SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), 1, 0.6f);
         player.playSound(SoundEvents.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, 1, 0.1f);
     }
 

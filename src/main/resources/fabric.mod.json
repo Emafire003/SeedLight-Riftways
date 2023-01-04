@@ -4,17 +4,18 @@
   "version": "${version}",
 
   "name": "SeedLight Riftways",
-  "description": "A mod trying to connect the minecraft multiverse!",
+  "description": "With this mod you will be able to seamlessly travel from world to world, from your own front lawn in that single player world you started ages ago to your friend's server, without going through the menus and stuff!",
   "authors": [
     "Emafire003!"
   ],
   "contact": {
-    "homepage": "https://github.com/Emafire003/SeedLightWorldNetwork",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://github.com/Emafire003/SeedLightRiftways",
+    "sources": "https://github.com/Emafire003/SeedLightRiftways",
+    "issues": "https://github.com/Emafire003/SeedLightRiftways/issues"
   },
 
   "license": "GNU LGPL3",
-  "icon": "assets/seedlight_riftways/icon.png",
+  "icon": "assets/seedlight_riftways/icon.jpg",
 
   "environment": "*",
   "entrypoints": {
@@ -37,7 +38,7 @@
   "depends": {
     "fabricloader": ">=0.14.9",
     "fabric-api": "*",
-    "minecraft": "~1.19",
+    "minecraft": ">=1.19.3",
     "java": ">=17"
   },
   "suggests": {

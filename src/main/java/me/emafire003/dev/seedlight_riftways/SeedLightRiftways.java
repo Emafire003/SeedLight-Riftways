@@ -1,6 +1,5 @@
 package me.emafire003.dev.seedlight_riftways;
 
-import com.mojang.datafixers.util.Pair;
 import me.emafire003.dev.seedlight_riftways.blocks.SLRBlocks;
 import me.emafire003.dev.seedlight_riftways.events.PlayerJoinServerCallback;
 import me.emafire003.dev.seedlight_riftways.items.SeedlightRiftwaysItems;
@@ -11,8 +10,11 @@ import me.emafire003.dev.seedlight_riftways.util.RiftwayDataPersistentState;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.item.ItemGroups;
+import net.minecraft.item.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -23,6 +25,8 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.*;
+
+import static me.emafire003.dev.seedlight_riftways.blocks.SLRBlocks.*;
 
 public class SeedLightRiftways implements ModInitializer {
 
@@ -54,6 +58,14 @@ public class SeedLightRiftways implements ModInitializer {
         PlayerJoinServerCallback.registerEvents();
         LootTableModifier.modifyLootTables();
         registerRiftwayPersistentData();
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.NATURAL).register(content -> {
+            content.addAfter(Items.AZALEA_LEAVES, SEEDLIGHT_RIFT_FLOWERING_LEAVES.asItem());
+            content.addAfter(Items.AZALEA_LEAVES, SEEDLIGHT_RIFT_LEAVES.asItem());
+            content.addAfter(Items.OAK_WOOD, RIFT_WOOD.asItem());
+            content.addAfter(Items.AZALEA_LEAVES, RIFTWAY_BLOCK.asItem());
+            content.addAfter(Items.BEETROOT_SEEDS, SeedlightRiftwaysItems.SEEDLIGHT_SEED);
+            content.addAfter(Items.BEETROOT_SEEDS, SeedlightRiftwaysItems.INTERRIFTWAYS_LEAF);
+        });
         LOGGER.info("Starting Listener server...");
 
     }

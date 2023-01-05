@@ -4,7 +4,10 @@ import com.mojang.logging.LogUtils;
 import me.emafire003.dev.seedlight_riftways.SeedLightRiftways;
 import me.emafire003.dev.seedlight_riftways.blocks.SLRBlocks;
 import me.emafire003.dev.seedlight_riftways.SeedLightRiftwaysClient;
+import me.emafire003.dev.seedlight_riftways.items.InterRiftwaysLeafItem;
+import me.emafire003.dev.seedlight_riftways.items.SeedlightRiftwaysItems;
 import me.emafire003.dev.seedlight_riftways.mixin.BundleItemInvoker;
+import me.emafire003.dev.seedlight_riftways.util.CheckValidAddress;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -20,6 +23,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
@@ -27,11 +31,14 @@ import org.slf4j.Logger;
 
 import java.util.*;
 
+import static me.emafire003.dev.seedlight_riftways.SeedLightRiftwaysClient.SERVER_IP;
+import static me.emafire003.dev.seedlight_riftways.items.InterRiftwaysLeafItem.NBT_SERVERIP_KEY;
+
 public class RiftWayBlockEntity extends EndPortalBlockEntity {
     private static final Logger LOGGER = LogUtils.getLogger();
     public static HashMap<UUID, Integer> players_on_cooldown = new HashMap<>();
     //TODO maybe make this configurable
-    public static int RIFTWAY_COOLDOWN = 5*2000;
+    public static int RIFTWAY_COOLDOWN = 5*1000;
 
     public RiftWayBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(SLRBlocks.RIFTWAY_BLOCKENTITY, blockPos, blockState);
@@ -43,12 +50,21 @@ public class RiftWayBlockEntity extends EndPortalBlockEntity {
             List<PlayerEntity> list = world.getEntitiesByClass(PlayerEntity.class, new Box(pos), (entity1 -> true));
             if (!list.isEmpty() && list.contains(MinecraftClient.getInstance().player)) {
                 if(SeedLightRiftwaysClient.IS_RIFTWAY_ACTIVE){
-                    if(MinecraftClient.getInstance().player.getStackInHand(Hand.MAIN_HAND).isOf(Items.BUNDLE)){
-                        setPassFromBundle(MinecraftClient.getInstance().player.getStackInHand(Hand.MAIN_HAND));
-                    }else if(MinecraftClient.getInstance().player.getStackInHand(Hand.OFF_HAND).isOf(Items.BUNDLE)){
-                        setPassFromBundle(MinecraftClient.getInstance().player.getStackInHand(Hand.OFF_HAND));
-                    }
+
                     if(!SeedLightRiftwaysClient.connection_initialised && !players_on_cooldown.containsKey(MinecraftClient.getInstance().player.getUuid())){
+                        //Checks if the player has a Bundle in hand, and sets the current local password to the contents of the bundle
+                        if(MinecraftClient.getInstance().player.getStackInHand(Hand.MAIN_HAND).isOf(Items.BUNDLE)){
+                            setPassFromBundle(MinecraftClient.getInstance().player.getStackInHand(Hand.MAIN_HAND));
+                        }else if(MinecraftClient.getInstance().player.getStackInHand(Hand.OFF_HAND).isOf(Items.BUNDLE)){
+                            setPassFromBundle(MinecraftClient.getInstance().player.getStackInHand(Hand.OFF_HAND));
+                        }
+
+                        //Checks if the player has an InterRiftwayLeaf in hand, and sets the destination of the riftway to the one of the leaf, if present
+                        if(MinecraftClient.getInstance().player.getStackInHand(Hand.MAIN_HAND).isOf(SeedlightRiftwaysItems.INTERRIFTWAYS_LEAF)){
+                            leafInteraction(MinecraftClient.getInstance().player.getStackInHand(Hand.MAIN_HAND), MinecraftClient.getInstance().player);
+                        }else if(MinecraftClient.getInstance().player.getStackInHand(Hand.OFF_HAND).isOf(SeedlightRiftwaysItems.INTERRIFTWAYS_LEAF)){
+                            leafInteraction(MinecraftClient.getInstance().player.getStackInHand(Hand.OFF_HAND), MinecraftClient.getInstance().player);
+                        }
                         SeedLightRiftwaysClient.setDepartureBlockpos(pos);
 
                         //TODO config the delay between teleports? Currently it's 10 seconds
@@ -256,6 +272,33 @@ public class RiftWayBlockEntity extends EndPortalBlockEntity {
         world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_AZALEA_BREAK, SoundCategory.BLOCKS, 1f, 1.4f, false);
         world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, SoundCategory.BLOCKS, 1f, 0.7f, false);
         world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, SoundCategory.BLOCKS, 1f, 1.6f, false);
+    }
+
+    private static void leafInteraction(ItemStack itemStack, PlayerEntity player){
+        if((itemStack.getItem() instanceof InterRiftwaysLeafItem)){
+            if(itemStack.getNbt().get(NBT_SERVERIP_KEY) == null || itemStack.getNbt().getString(NBT_SERVERIP_KEY).equalsIgnoreCase("")){
+                return;
+            }
+
+            //SERVER BITS
+            if(!player.getWorld().isClient){
+                SeedLightRiftways.SAVED_SERVER_IP = itemStack.getNbt().getString(NBT_SERVERIP_KEY);
+            }//CLIENT ONLY BITS
+            else{
+                SeedLightRiftwaysClient.SERVER_IP = itemStack.getNbt().getString(NBT_SERVERIP_KEY);
+                CheckValidAddress checkAddress = new CheckValidAddress();
+                checkAddress.setAddress(SERVER_IP);
+                checkAddress.setPlayer(player);
+                checkAddress.start();
+                //TODO lang translatable
+                player.sendMessage(Text.literal(SeedLightRiftways.PREFIX+" §bAltering the rift, going towards: §d" + SeedLightRiftwaysClient.SERVER_IP));
+            }
+            if(!player.getAbilities().creativeMode){
+                itemStack.decrement(1);
+            }
+
+            return;
+        }
     }
     
 }

@@ -16,7 +16,7 @@ It's kind of is the fundations of a "real" Minecraft "multiverse"/"gigaverse", o
 ## Official Video
 It's a mixture between a tutorial and story telling, so if you want more details read through this page, otherwise if you'd like a more immersive approach, feel free to take a look at this:
 
-/link to the video/
+https://youtu.be/5eJGKrLh-eA
 
 ## How to play
 ### ![seedlight_seed - Copia](https://user-images.githubusercontent.com/29462910/210248693-658e9121-e2a5-435f-b9a4-1e33ecf5ac1b.png) Creating the Riftway portal ![seedlight_seed - Copia](https://user-images.githubusercontent.com/29462910/210248693-658e9121-e2a5-435f-b9a4-1e33ecf5ac1b.png)

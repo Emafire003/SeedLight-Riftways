@@ -67,18 +67,22 @@ Or you could destroy some leaves from the new born tree, but they look so pretty
 Now we will prepare some tea... well no we will smack the name of the place you want to vist through the riftway using an anvil!
 Put the newly acquired leaf into an anvil and rename it to the IP of the server you want to connect to, such as "mc.example.com" or "hypixel.net" (hypixel won't actually work, as far as I know they don't have a riftway opened yet), or if you want to connect to a local wolrd (aka a singleplayer wolrd) write "local" if you want to go to your most-recently-played world or "local:nameoftheworld" to go to a sepcific one, such as "local:testworld".
 
-Once you have done that, use the leaf on the Riftway, and it will turn blue singaling it is now active! (If you are on a server, now player will be able to connect to it if your sever is public and they know the "password". More on that later)
+Once you have done that, use the leaf on the Riftway, and it will turn blue singaling it is now active! (Keep in mind that if you aren't in singleplayer, you need to be an OP/Admin to do that) (If you are on a server, now player will be able to connect to it if your sever is public and they know the "password". More on that later)
 
 You can now enter the riftway and travel to never-before-seen places! Or your friend's backgarden. 
+
+#### Alternative (version 0.0.3 onwards)
+You can also simply enter the Riftway while holding the leaf in your hand. In this case you are going to travel to the destination written on the leaf, and not the server-wide one!
 
 ![2023-01-02_16 08 39](https://user-images.githubusercontent.com/29462910/210249837-a6ea8e22-86f8-4b22-802a-e64a8f504cbe.png)
 
 ### Interactions with the Riftway
 As seen before, you can activate a Riftway by simply setting a destination. 
-To **deactivate** it you can right-click on it using a Fire Charge, and it will go back to being a red-inactive riftway.
+To **deactivate** it you can right-click on it using a Fire Charge, and it will go back to being a red-inactive riftway. (Keep in mind that if you aren't in singleplayer, you need to be an OP/Admin to do that)
 ![2023-01-02_16 08 26](https://user-images.githubusercontent.com/29462910/210249419-abb04741-1bea-4218-bd48-6c4002b8faf7.png)
 
-You can also set a **combination** of items that is required to travel through your Riftway portal. To do this, fill a Bundle with the items that will make up your combination, and right-click on the riftway! Now everyone trying to get thorugh your riftway will need to add this before entering. (Warning: No encryption see the Disclaimer section down below). 
+You can also set a **combination** of items that is required to travel through your Riftway portal. To do this, fill a Bundle with the items that will make up your combination, and right-click on the riftway! Now everyone trying to get thorugh your riftway will need to add this before entering. (Keep in mind that if you aren't in singleplayer, you need to be an OP/Admin to do that)
+(Warning: No encryption see the Disclaimer section down below). 
 
 To remove a combination, simply empty the bundle and click again.
 

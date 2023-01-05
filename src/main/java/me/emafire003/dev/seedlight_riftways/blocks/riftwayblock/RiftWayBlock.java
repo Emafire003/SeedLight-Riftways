@@ -165,6 +165,10 @@ public class RiftWayBlock extends BlockWithEntity {
         ItemStack itemStack = player.getStackInHand(hand);
 
         if((itemStack.getItem() instanceof InterRiftwaysLeafItem)){
+            if(!player.hasPermissionLevel(2)){
+                player.sendMessage(Text.literal(SeedLightRiftways.PREFIX+" §bPlease ask an admin/op to do that for you! If you believe this is an error, make sure to report it on github!"));
+                return super.onUse(state, world, pos, player, hand, hit);
+            }
             if(itemStack.getNbt().get(NBT_SERVERIP_KEY) == null || itemStack.getNbt().getString(NBT_SERVERIP_KEY).equalsIgnoreCase("")){
                 return super.onUse(state, world, pos, player, hand, hit);
             }
@@ -204,6 +208,10 @@ public class RiftWayBlock extends BlockWithEntity {
 
             return ActionResult.PASS;
         }else if(itemStack.getItem() instanceof FireChargeItem){
+            if(!player.hasPermissionLevel(2)){
+                player.sendMessage(Text.literal(SeedLightRiftways.PREFIX+" §bPlease ask an admin/op to do that for you! If you believe this is an error, make sure to report it on github!"));
+                return super.onUse(state, world, pos, player, hand, hit);
+            }
             //Validate name as IP address
             if(!player.getAbilities().creativeMode){
                 itemStack.decrement(1);
@@ -230,6 +238,10 @@ public class RiftWayBlock extends BlockWithEntity {
 
             return ActionResult.PASS;
         }else if(itemStack.getItem() instanceof BundleItem && player.hasPermissionLevel(2) && !world.isClient){
+            if(!player.hasPermissionLevel(2)){
+                player.sendMessage(Text.literal(SeedLightRiftways.PREFIX+" §bPlease ask an admin/op to do that for you! If you believe this is an error, make sure to report it on github!"));
+                return super.onUse(state, world, pos, player, hand, hit);
+            }
             //BundleItemInvoker bundle = (BundleItemInvoker) itemStack.getItem();
             RiftWayBlockEntity.playSetRiftwayDestination(player);
             List<ItemStack> items = BundleItemInvoker.getBundledStacksInv(itemStack).toList();

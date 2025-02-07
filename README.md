@@ -11,8 +11,6 @@ This mod doesn't really add something you *can't* already do, but makes it a lot
 
 It's kind of is the fundations of a "real" Minecraft "multiverse"/"gigaverse", or at least a cool way to connect worlds toghether without breaking the immersion by going the main menu and stuff. Scroll down below to see how to begin and how it works! (keep in mind it's in alpha now!)
 
-[![bisecthosting](https://www.bisecthosting.com/partners/custom-banners/e9c85d2a-cafa-4e2f-98bf-4f62bd9e951c.png)](https://www.bisecthosting.com/LightDev)
-
 ## Official Video
 It's a mixture between a tutorial and story telling, so if you want more details read through this page, otherwise if you'd like a more immersive approach, feel free to take a look at this:
 
